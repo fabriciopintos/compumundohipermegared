@@ -1,0 +1,21 @@
+        h1{
+            font-family: "Anton SC", sans-serif;
+            font-weight: 400;
+            font-size: 128px;
+            font-style: normal;
+                color: #000000;
+            }
+        h2{
+                font-family: "Anton SC", sans-serif;
+                font-weight: 400;
+                font-size: 36px;
+                font-style: normal;
+                color: white;
+            }
+h4{
+                font-family: "Anton SC", sans-serif;
+                font-weight: 400;
+                font-size: 24px;
+                font-style: normal;
+                color: #6D28D9;
+            }
