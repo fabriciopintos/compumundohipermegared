@@ -1,0 +1,60 @@
+
+
+body {
+  background-color: #111111;
+  margin: 0;
+}
+.triangulo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #8B3DFF;
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+  z-index: -1;
+}
+.inicio{
+    font-family: "Anton SC", sans-serif;
+     font-weight: 400;        
+  font-style:normal;       
+  font-size: 60px;           
+  line-height: 100%;        
+  letter-spacing: 0;
+   
+}
+
+.input-linea {
+  background-color: transparent;   
+  border: none;                   
+  border-bottom: 1px solid white;  
+  border-radius: 0;                
+  color: white;                    
+  box-shadow: none;                
+}
+
+.input-linea:focus {
+  background-color: transparent;
+  border-bottom: 1px solid white;
+  box-shadow: none;
+  color: white;
+  outline: none;
+}
+.input-linea::placeholder {
+  color: white;
+  opacity: 1
+}
+.btn-login {
+  background-color: #8B3DFF;   
+  border: none;
+  border-radius: 50px;         
+  color: white;
+  padding: 10px 0;
+  width: 100%;                 
+  font-size: 16px;
+  cursor: pointer;
+
+}
+.btn-login:hover {
+  background-color: #7a2fe6;  
+}
