@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Dashboard</title>
+  <meta name="description" content="Panel de usuario de FitPower.">
+  <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/css/loader.css">
+  <link rel="stylesheet" href="/dist/css/dashboard.css">
+  <link rel="stylesheet" href="/dist/css/footer.css">
+</head>
+<body>
+  <script>
+    if (!localStorage.getItem('fitpower_token')) {
+      window.location.replace('/login');
+    }
+  </script>
+
+  <nav class="navbar-fitpower">
+    <div class="dash-shell nav-shell">
+      <a class="brand-title" href="/">FITPOWER</a>
+      <button type="button" class="lang-toggle" data-lang-toggle data-i18n="lang.label">ES</button>
+      <button class="nav-burger" type="button" id="navBurger" aria-label="Menú">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#rutinas" data-i18n="nav.routines">RUTINAS</a></li>
+        <li><a href="#planes" data-i18n="nav.plans">PLANES</a></li>
+        <li><a class="active" href="#actividades" data-i18n="nav.activities">ACTIVIDADES</a></li>
+        <li><a href="/login" id="logout-btn" data-i18n="nav.logout">SALIR</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="dash-shell">
+    <header class="hero" id="contenido">
+      <div class="hero-grid">
+        <div class="hero-visual">
+          <div class="foto-circular">
+            <img src="/imagenes/mancuerna.svg" alt="Mancuerna FitPower">
+          </div>
+        </div>
+        <div class="hero-copy">
+          <h1>
+            <span class="welcome-line" data-i18n="dash.welcome">BIENVENIDO</span>
+            <span class="usuario" id="nombreUsuario">“USUARIO”</span>
+          </h1>
+          <p class="linea-conexion">
+            <span data-i18n="dash.weekPrefix">ES LA</span>
+            “<span id="vecesSemana">-</span>”
+            <span data-i18n="dash.weekSuffix">VEZ QUE TE CONECTAS ESTA SEMANA</span>
+          </p>
+          <p class="linea-anotado">
+            <span data-i18n="dash.enrolledPrefix">ESTAS ANOTADO EN</span>
+            “<span id="cantidadActividades">-</span>”
+            <span data-i18n="dash.enrolledSuffix">ACTIVIDADES.</span>
+          </p>
+          <p id="dashboard-error" hidden></p>
+        </div>
+      </div>
+    </header>
+
+    <section id="actividades" class="block-actividades">
+      <h2 class="section-title" data-i18n="dash.activities">ACTIVIDADES</h2>
+      <p class="section-sub" data-i18n="dash.activitiesSub">ELEGÍ TU ENTRENAMIENTO Y RESERVÁ TU LUGAR</p>
+      <div class="grid-actividades" id="gridActividades"></div>
+    </section>
+
+    <section id="proximas" class="block-clases">
+      <h2 class="section-title" data-i18n="dash.upcoming">PROXIMAS CLASES</h2>
+      <p class="section-sub" data-i18n="dash.upcomingSub">RESERVÁ TU LUGAR AHORA.</p>
+
+      <div class="panel-clases">
+        <div class="selector-dias" id="selectorDias">
+          <button class="flecha" type="button" aria-label="Día anterior">&lsaquo;</button>
+          <button class="dia activo" type="button" data-day="LUN">LUN</button>
+          <button class="dia" type="button" data-day="MAR">MAR</button>
+          <button class="dia" type="button" data-day="MIE">MIE</button>
+          <button class="dia" type="button" data-day="JUE">JUE</button>
+          <button class="dia" type="button" data-day="VIE">VIE</button>
+          <button class="dia" type="button" data-day="SAB">SAB</button>
+          <button class="dia" type="button" data-day="DOM">DOM</button>
+          <button class="flecha" type="button" aria-label="Día siguiente">&rsaquo;</button>
+        </div>
+        <div id="listaClases"></div>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="/dist/js/site.js"></script>
+  <script src="/dist/js/i18n.js"></script>
+  <script src="/dist/js/auth.js"></script>
+  <script src="/dist/js/dashboard.js"></script>
+</body>
+</html>

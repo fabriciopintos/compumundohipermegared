@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Panel de Administrador</title>
+  <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/css/loader.css">
+  <link rel="stylesheet" href="/dist/css/dashboard-admin.css">
+  <link rel="stylesheet" href="/dist/css/footer.css">
+</head>
+<body>
+  <script>
+    if (!localStorage.getItem('fitpower_token')) {
+      window.location.replace('/login');
+    }
+  </script>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-title">FITPOWER</div>
+        <div class="brand-sub">PANEL DE ADMINISTRADOR</div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#dashboard">DASHBOARD</a>
+        <a class="nav-item" href="#usuarios">USUARIOS</a>
+        <a class="nav-item" href="#entrenadores">ENTRENADORES</a>
+        <a class="nav-item" href="#pagos">PAGOS</a>
+        <a class="nav-item" href="#acciones">SUSCRIPCIONES</a>
+        <a class="nav-item" href="#acciones">ACTIVIDADES</a>
+        <a class="nav-item" href="#acciones">REPORTES</a>
+        <a class="nav-item" href="#acciones">CONFIGURACIÓN</a>
+        <a class="nav-item" href="#acciones">MENSAJES</a>
+        <a class="nav-item" href="#acciones">NOTIFICACIONES</a>
+      </nav>
+
+      <div class="quick-box">
+        <div class="quick-title">ACCESO RÁPIDO</div>
+        <button type="button" data-open-create="usuario">Nuevo Usuario</button>
+        <button type="button" data-open-create="entrenador">Nuevo Entrenador</button>
+        <a href="#pagos">Gestionar Pagos</a>
+        <a href="#acciones">Ver Reportes</a>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar">A</div>
+        <div>
+          <strong>ADMIN</strong>
+          <span>Administrador</span>
+        </div>
+      </div>
+      <a class="logout" href="/login" id="logout-btn">CERRAR SESIÓN</a>
+    </aside>
+
+    <div class="content">
+      <header class="topbar" id="dashboard">
+        <div>
+          <h1>BIENVENIDO, <span>ADMINISTRADOR</span></h1>
+          <p>Gestioná usuarios, entrenadores, pagos y toda la plataforma.</p>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" type="button">☰</button>
+          <button class="icon-btn" type="button">🔔<i></i></button>
+          <a class="salir" href="/login" id="logout-btn-top">SALIR</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="stats">
+          <article class="stat-card">
+            <div class="label">Usuarios</div>
+            <div class="value" id="statUsers">0</div>
+            <div class="delta">Socios registrados</div>
+          </article>
+          <article class="stat-card">
+            <div class="label">Entrenadores</div>
+            <div class="value" id="statTrainers">0</div>
+            <div class="delta">Staff activo</div>
+          </article>
+          <article class="stat-card">
+            <div class="label">Ingresos (Mes)</div>
+            <div class="value">$ 125.430</div>
+            <div class="delta up">+18% vs mes anterior</div>
+          </article>
+          <article class="stat-card">
+            <div class="label">Suscripciones</div>
+            <div class="value">856</div>
+            <div class="delta up">Activas</div>
+          </article>
+        </section>
+
+        <section class="panel" id="usuarios">
+          <div class="panel-head">
+            <h2>GESTIÓN DE USUARIOS</h2>
+            <button type="button" class="btn-main" data-open-create="usuario">+ NUEVO USUARIO</button>
+          </div>
+          <div class="filters">
+            <label class="search">
+              <span>⌕</span>
+              <input type="search" id="searchUsers" placeholder="Buscar usuario...">
+            </label>
+            <div class="chips">
+              <button type="button" class="chip active" data-filter="all">TODOS</button>
+              <button type="button" class="chip" data-filter="usuario">USUARIOS</button>
+              <button type="button" class="chip" data-filter="admin">ADMINS</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>USUARIO</th>
+                  <th>EMAIL</th>
+                  <th>ROL</th>
+                  <th>ESTADO</th>
+                  <th>REGISTRO</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="6">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p id="usersError" class="error" hidden></p>
+        </section>
+
+        <section class="panel" id="entrenadores">
+          <div class="panel-head">
+            <h2>ENTRENADORES</h2>
+            <button type="button" class="btn-main" data-open-create="entrenador">+ NUEVO ENTRENADOR</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ENTRENADOR</th>
+                  <th>EMAIL</th>
+                  <th>ESPECIALIDAD</th>
+                  <th>ESTADO</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody id="trainersTableBody">
+                <tr><td colspan="5">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="pagos">
+          <div class="panel-head"><h2>GESTIÓN DE PAGOS</h2></div>
+          <div class="mini-stats">
+            <article><strong>$ 125.430</strong><span>Ingresos</span></article>
+            <article><strong>$ 12.800</strong><span>Pendientes</span></article>
+            <article><strong>142</strong><span>Completados</span></article>
+            <article><strong>7</strong><span>Fallidos</span></article>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>USUARIO</th>
+                  <th>PLAN</th>
+                  <th>MONTO</th>
+                  <th>MÉTODO</th>
+                  <th>ESTADO</th>
+                  <th>FECHA</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>María López</td><td>Premium</td><td>$ 2.500</td><td>Visa</td>
+                  <td><span class="badge ok">Completado</span></td><td>10/09/2026</td>
+                  <td><button type="button" class="btn-sm">VER</button></td>
+                </tr>
+                <tr>
+                  <td>Juan Pérez</td><td>Básico</td><td>$ 1.200</td><td>Mastercard</td>
+                  <td><span class="badge warn">Pendiente</span></td><td>09/09/2026</td>
+                  <td><button type="button" class="btn-sm">VER</button></td>
+                </tr>
+                <tr>
+                  <td>Lucía Díaz</td><td>Premium</td><td>$ 2.500</td><td>Visa</td>
+                  <td><span class="badge bad">Fallido</span></td><td>08/09/2026</td>
+                  <td><button type="button" class="btn-sm">VER</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="actions" id="acciones">
+          <h2>ACCIONES RÁPIDAS</h2>
+          <div class="actions-grid">
+            <button type="button" data-open-create="usuario"><span>＋</span>Nuevo Usuario</button>
+            <button type="button" data-open-create="entrenador"><span>🏋</span>Nuevo Entrenador</button>
+            <button type="button"><span>🏷</span>Planes y Precios</button>
+            <button type="button"><span>▤</span>Reportes</button>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-footer></div>
+    </div>
+  </div>
+
+  <div class="modal" id="userModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Nuevo usuario</h3>
+        <button type="button" id="modalClose" aria-label="Cerrar">×</button>
+      </div>
+      <form id="createUserForm">
+        <label>
+          Nombre
+          <input type="text" name="name" id="userName" required>
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" id="userEmail" required>
+        </label>
+        <label>
+          Contraseña
+          <input type="password" name="password" id="userPassword" minlength="8" required>
+        </label>
+        <label>
+          Rol
+          <select name="role" id="userRole">
+            <option value="usuario">Usuario</option>
+            <option value="entrenador">Entrenador</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </label>
+        <p class="error" id="modalError" hidden></p>
+        <button type="submit" class="btn-main" id="modalSubmit">CREAR USUARIO</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/dist/js/site.js"></script>
+  <script src="/dist/js/auth.js"></script>
+  <script src="/dist/js/dashboard-admin.js"></script>
+</body>
+</html>
