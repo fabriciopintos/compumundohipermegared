@@ -41,6 +41,13 @@
   letter-spacing: 1px;
   line-height: 1;
   color: #FFFFFF;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.site-footer-brand:hover {
+  color: #8B45F5;
 }
 
 .site-footer-title {

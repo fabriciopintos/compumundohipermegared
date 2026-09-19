@@ -1,9 +1,9 @@
-/* Ajustes mobile complementarios (landing ya incluye responsive en style.css) */
+/* Ajustes mobile complementarios */
 @media (max-width: 991px) {
-  .triangulo {
+  .login-body .triangulo {
     width: 100%;
-    height: 28%;
-    clip-path: polygon(0 0, 100% 0, 0 100%);
+    height: 34%;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
   }
 
   .inicio {
@@ -15,5 +15,9 @@
   .btn-login,
   .btn-unite {
     display: inline-block;
+  }
+
+  .login-panel {
+    width: 100%;
   }
 }

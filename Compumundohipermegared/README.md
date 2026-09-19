@@ -7,7 +7,7 @@ Aplicación web del gimnasio FitPower: landing pública, login y dashboard de us
 - Docker Desktop (incluye Docker Compose)
 - Git (opcional)
 
-No hace falta instalar PHP ni PostgreSQL en el host: ambos corren en contenedores.
+No hace falta instalar PHP ni MySQL en el host: ambos corren en contenedores.
 
 ## Instalación
 
@@ -31,8 +31,9 @@ También podés copiar `api/.env.example` a `api/.env` si vas a ejecutar scripts
 
 | Variable | Uso |
 | --- | --- |
-| `DB_HOST` | Host de PostgreSQL (`db` dentro de Docker) |
-| `DB_PORT` | Puerto (por defecto `5432`) |
+| `DB_HOST` | Host de MySQL (`db` dentro de Docker) |
+| `DB_PORT` | Puerto interno del contenedor (`3306`) |
+| `DB_HOST_PORT` | Puerto publicado en tu PC (por defecto `3307`) |
 | `DB_NAME` | Nombre de la base |
 | `DB_USER` | Usuario de la base |
 | `DB_PASSWORD` | Contraseña de la base |
@@ -45,7 +46,7 @@ Nunca subas secretos reales al repositorio. `.env` está ignorado por git.
 
 ## Base de datos
 
-PostgreSQL 16 se inicia con volumen persistente:
+MySQL 8 se inicia con volumen persistente:
 
 ```bash
 docker compose up -d --build
@@ -127,7 +128,7 @@ API PHP (Apache)
         ↓
 JWT + password_hash
         ↓
-PostgreSQL (Docker, volumen persistente)
+MySQL 8 (Docker, volumen persistente)
 ```
 
 Modelo entidad-relación: ver [`docs/MER.md`](docs/MER.md).

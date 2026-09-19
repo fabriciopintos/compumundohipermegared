@@ -26,13 +26,14 @@ $roleUsers = [
 $upsertUser = $db->prepare(
     'INSERT INTO users (name, email, password_hash, role)
      VALUES (:name, :email, :password_hash, :role)
-     ON CONFLICT (email) DO UPDATE
-       SET name = EXCLUDED.name,
-           role = EXCLUDED.role,
-           password_hash = EXCLUDED.password_hash,
-           updated_at = NOW()
-     RETURNING id'
+     ON DUPLICATE KEY UPDATE
+       name = VALUES(name),
+       role = VALUES(role),
+       password_hash = VALUES(password_hash),
+       updated_at = CURRENT_TIMESTAMP'
 );
+
+$findUserId = $db->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
 
 $userIds = [];
 foreach ($roleUsers as $roleUser) {
@@ -42,7 +43,8 @@ foreach ($roleUsers as $roleUser) {
         ':password_hash' => $hash,
         ':role' => $roleUser['role'],
     ]);
-    $userIds[$roleUser['role']] = (int) $upsertUser->fetchColumn();
+    $findUserId->execute([':email' => $roleUser['email']]);
+    $userIds[$roleUser['role']] = (int) $findUserId->fetchColumn();
 }
 
 $activityCount = (int) $db->query('SELECT COUNT(*) FROM activities')->fetchColumn();
@@ -59,7 +61,7 @@ if ($activityCount === 0) {
     ];
 
     $insertActivity = $db->prepare(
-        'INSERT INTO activities (name, slug, image_url) VALUES (:name, :slug, :image_url) RETURNING id'
+        'INSERT INTO activities (name, slug, image_url) VALUES (:name, :slug, :image_url)'
     );
     foreach ($activities as $activity) {
         $insertActivity->execute([
@@ -67,7 +69,7 @@ if ($activityCount === 0) {
             ':slug' => $activity[1],
             ':image_url' => $activity[2],
         ]);
-        $activityIds[$activity[1]] = (int) $insertActivity->fetchColumn();
+        $activityIds[$activity[1]] = (int) $db->lastInsertId();
     }
 } else {
     $rows = $db->query('SELECT id, slug FROM activities')->fetchAll(PDO::FETCH_ASSOC);
@@ -99,8 +101,7 @@ if ($sessionCount === 0 && $activityIds) {
 
     $insertSession = $db->prepare(
         'INSERT INTO class_sessions (activity_id, day_of_week, start_time, duration_minutes, capacity, professor_name)
-         VALUES (:activity_id, :day_of_week, :start_time, :duration_minutes, :capacity, :professor_name)
-         RETURNING id'
+         VALUES (:activity_id, :day_of_week, :start_time, :duration_minutes, :capacity, :professor_name)'
     );
 
     foreach ($sessions as $session) {
@@ -115,7 +116,7 @@ if ($sessionCount === 0 && $activityIds) {
             ':capacity' => $session[4],
             ':professor_name' => $session[5],
         ]);
-        $id = (int) $insertSession->fetchColumn();
+        $id = (int) $db->lastInsertId();
         if ($firstSessionId === null) {
             $firstSessionId = $id;
         }
@@ -127,9 +128,8 @@ if ($sessionCount === 0 && $activityIds) {
 $usuarioId = $userIds['usuario'] ?? null;
 if ($usuarioId && $firstSessionId) {
     $enroll = $db->prepare(
-        'INSERT INTO enrollments (user_id, class_session_id)
-         VALUES (:user_id, :class_session_id)
-         ON CONFLICT (user_id, class_session_id) DO NOTHING'
+        'INSERT IGNORE INTO enrollments (user_id, class_session_id)
+         VALUES (:user_id, :class_session_id)'
     );
     $enroll->execute([
         ':user_id' => $usuarioId,

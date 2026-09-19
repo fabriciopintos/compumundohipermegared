@@ -53,8 +53,10 @@ async function apiFetch(path, options) {
   }
   if (response.status === 401) {
     clearToken();
-    if (!window.location.pathname.endsWith('/login') && !window.location.pathname.includes('login.html')) {
-      window.location.href = '/login';
+    const path = window.location.pathname || '';
+    const isPublic = path === '/' || path.endsWith('/login') || path.includes('login.html') || path.endsWith('index.html');
+    if (!isPublic) {
+      window.location.href = '/';
     }
   }
   return { ok: response.ok, status: response.status, payload };

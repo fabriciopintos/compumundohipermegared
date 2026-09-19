@@ -8,9 +8,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/dist/css/loader.css">
   <link rel="stylesheet" href="/dist/css/dashboard-entrenador.css">
+  <link rel="stylesheet" href="/dist/css/chat.css">
   <link rel="stylesheet" href="/dist/css/footer.css">
 </head>
 <body>
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-ring" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
   <script>
     if (!localStorage.getItem('fitpower_token')) {
       window.location.replace('/login');
@@ -20,7 +28,7 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-title">FITPOWER</div>
+        <a class="brand-title" href="/">FITPOWER</a>
         <div class="brand-sub">PANEL DE ENTRENADOR</div>
       </div>
       <nav class="nav">
@@ -34,7 +42,7 @@
       <div class="nav-bottom">
         <a class="nav-item" href="#config"><span class="ico">⚙</span> Configuración</a>
         <a class="nav-item" href="#ayuda"><span class="ico">?</span> Ayuda</a>
-        <a class="nav-item logout" href="/login" id="logout-btn"><span class="ico">⇢</span> Cerrar Sesión</a>
+        <a class="nav-item logout" href="/" id="logout-btn"><span class="ico">⇢</span> Cerrar Sesión</a>
       </div>
     </aside>
 
@@ -232,6 +240,12 @@
           </div>
           <a class="more-link" href="#alumnos">VER TODOS LOS ALUMNOS →</a>
         </section>
+
+        <section class="panel" id="mensajes">
+          <h2 class="chat-section-title">MENSAJES</h2>
+          <p class="chat-section-sub">Hablá con administración y con tus alumnos.</p>
+          <div id="entrenador-chat-root"></div>
+        </section>
       </main>
 
       <div data-site-footer></div>
@@ -240,6 +254,7 @@
 
   <script src="/dist/js/site.js"></script>
   <script src="/dist/js/auth.js"></script>
+  <script src="/dist/js/chat.js"></script>
   <script src="/dist/js/dashboard-entrenador.js"></script>
 </body>
 </html>

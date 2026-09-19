@@ -15,20 +15,32 @@ function waitForConnection(int $retries = 30): PDO {
             return (new Database())->getConnection();
         } catch (Exception $e) {
             $last = $e;
-            fwrite(STDERR, "Esperando PostgreSQL... (" . ($i + 1) . "/{$retries})\n");
+            fwrite(STDERR, "Esperando MySQL... (" . ($i + 1) . "/{$retries}): " . $e->getMessage() . "\n");
             sleep(2);
         }
     }
-    fwrite(STDERR, "No se pudo conectar a PostgreSQL: " . ($last ? $last->getMessage() : 'error desconocido') . "\n");
+    fwrite(STDERR, "No se pudo conectar a MySQL: " . ($last ? $last->getMessage() : 'error desconocido') . "\n");
     exit(1);
+}
+
+function runSqlFile(PDO $db, string $sql): void {
+    $sql = preg_replace('/^\s*--.*$/m', '', $sql);
+    $parts = preg_split('/;\s*\n/', $sql);
+    foreach ($parts as $part) {
+        $stmt = trim($part);
+        if ($stmt === '') {
+            continue;
+        }
+        $db->exec($stmt);
+    }
 }
 
 $db = waitForConnection();
 $db->exec(
     'CREATE TABLE IF NOT EXISTS schema_migrations (
         version VARCHAR(50) PRIMARY KEY,
-        applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )'
+        applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
 );
 
 $appliedStmt = $db->query('SELECT version FROM schema_migrations');
@@ -48,15 +60,12 @@ foreach ($files as $file) {
         continue;
     }
 
-    $db->beginTransaction();
     try {
-        $db->exec($sql);
+        runSqlFile($db, $sql);
         $insert = $db->prepare('INSERT INTO schema_migrations (version) VALUES (:version)');
         $insert->execute([':version' => $version]);
-        $db->commit();
         fwrite(STDOUT, "Migración aplicada: {$version}\n");
     } catch (Exception $e) {
-        $db->rollBack();
         fwrite(STDERR, "Error en migración {$version}: " . $e->getMessage() . "\n");
         exit(1);
     }

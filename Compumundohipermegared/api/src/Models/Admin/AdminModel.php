@@ -48,8 +48,7 @@ class AdminModel {
     public function create(string $name, string $email, string $passwordHash, string $role): array {
         $stmt = $this->db->prepare(
             'INSERT INTO users (name, email, password_hash, role)
-             VALUES (:name, :email, :password_hash, :role)
-             RETURNING id, name, email, role, created_at, updated_at'
+             VALUES (:name, :email, :password_hash, :role)'
         );
         $stmt->execute([
             ':name' => $name,
@@ -57,7 +56,15 @@ class AdminModel {
             ':password_hash' => $passwordHash,
             ':role' => $role,
         ]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $id = (int) $this->db->lastInsertId();
+        $created = $this->findById($id);
+        return $created ?: [
+            'id' => $id,
+            'name' => $name,
+            'email' => $email,
+            'role' => $role,
+            'created_at' => null,
+        ];
     }
 
     public function delete(int $id): bool {

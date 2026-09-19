@@ -32,7 +32,7 @@ class DashboardModel {
                 EXISTS(
                     SELECT 1 FROM enrollments e2
                     WHERE e2.class_session_id = cs.id AND e2.user_id = :user_id
-                )::int AS is_enrolled
+                ) AS is_enrolled
              FROM class_sessions cs
              INNER JOIN activities a ON a.id = cs.activity_id
              WHERE cs.day_of_week = :day

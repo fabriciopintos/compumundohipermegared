@@ -7,25 +7,33 @@ document.addEventListener('DOMContentLoaded', async function () {
   const nombre = document.getElementById('nombreEntrenador');
   const logoutBtn = document.getElementById('logout-btn');
 
-  try {
-    const { ok, payload } = await apiFetch('/me');
-    if (ok && payload.data && payload.data.user) {
-      const user = payload.data.user;
-      setRole(user.role || 'entrenador');
-      nombre.textContent = (user.name || 'ENTRENADOR').toUpperCase();
-    }
-  } catch (err) {
-    // boceto: si falla /me, se mantiene el placeholder
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function (event) {
+      event.preventDefault();
+      try {
+        await apiFetch('/logout', { method: 'POST' });
+      } catch (err) {
+        // cierre local
+      }
+      clearToken();
+      window.location.href = '/';
+    });
   }
 
-  logoutBtn.addEventListener('click', async function (event) {
-    event.preventDefault();
+  if (nombre) {
     try {
-      await apiFetch('/logout', { method: 'POST' });
+      const { ok, payload } = await apiFetch('/me');
+      if (ok && payload.data && payload.data.user) {
+        const user = payload.data.user;
+        setRole(user.role || 'entrenador');
+        nombre.textContent = (user.name || 'ENTRENADOR').toUpperCase();
+      }
     } catch (err) {
-      // cierre local
+      // se mantiene el placeholder
     }
-    clearToken();
-    window.location.href = '/login';
-  });
+  }
+
+  if (typeof mountFitpowerChat === 'function') {
+    mountFitpowerChat({ root: '#entrenador-chat-root' });
+  }
 });

@@ -48,25 +48,25 @@ class AuthModel {
     }
 
     public function tooManyAttempts(string $ip, int $max = 8, int $minutes = 15): bool {
+        $minutes = max(1, min(120, $minutes));
         $stmt = $this->db->prepare(
-            'SELECT COUNT(*)
+            "SELECT COUNT(*)
              FROM login_attempts
              WHERE ip = :ip
-               AND attempted_at >= NOW() - make_interval(mins => :minutes)'
+               AND attempted_at >= DATE_SUB(NOW(), INTERVAL {$minutes} MINUTE)"
         );
         $stmt->execute([
             ':ip' => $ip,
-            ':minutes' => $minutes,
         ]);
         return (int) $stmt->fetchColumn() >= $max;
     }
 
     public function weeklyLoginCount(int $userId): int {
         $stmt = $this->db->prepare(
-            "SELECT COUNT(*)
+            'SELECT COUNT(*)
              FROM login_events
              WHERE user_id = :user_id
-               AND logged_at >= date_trunc('week', NOW())"
+               AND logged_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)'
         );
         $stmt->execute([':user_id' => $userId]);
         return (int) $stmt->fetchColumn();

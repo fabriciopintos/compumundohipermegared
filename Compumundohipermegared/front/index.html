@@ -9,12 +9,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="dist/css/loader.css">
-  <link rel="stylesheet" href="dist/css/style.css">
-  <link rel="stylesheet" href="dist/css/mobile.css">
-  <link rel="stylesheet" href="dist/css/footer.css">
+  <link rel="stylesheet" href="/dist/css/loader.css">
+  <link rel="stylesheet" href="/dist/css/style.css">
+  <link rel="stylesheet" href="/dist/css/mobile.css">
+  <link rel="stylesheet" href="/dist/css/footer.css">
 </head>
 <body class="landing-body">
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-ring" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
   <header class="landing-header">
     <div class="landing-shell">
       <nav class="landing-nav">
@@ -27,7 +34,7 @@
 
       <div class="hero-grid">
         <div class="hero-copy">
-          <p class="text-violet">EST. 2024</p>
+          <p class="text-violet">EST. 2026</p>
           <h2 class="hero-title" data-i18n="landing.hero" data-i18n-mode="html">
             TU MEJOR VERSIÓN<br>TE ESTÁ ESPERANDO.<br>EMPIEZA HOY.
           </h2>
@@ -35,7 +42,7 @@
           <a href="/login" class="btn-unite" data-i18n="landing.cta">UNITE AQUI</a>
         </div>
         <div class="hero-media">
-          <img src="./imagenes/Rectangle 3.png" class="img-portada" alt="Entrenamiento FitPower">
+          <img src="/imagenes/Rectangle%203.png" class="img-portada" alt="Entrenamiento FitPower">
         </div>
       </div>
     </div>
@@ -47,7 +54,7 @@
         <h2 class="staff-title" data-i18n="landing.staff">NUESTRO PERSONAL</h2>
         <div class="staff-grid">
           <div class="staff-photo-wrap">
-            <img src="./imagenes/image 4.png" class="staff-photo" alt="Entrenadores FitPower">
+            <img src="/imagenes/image%204.png" class="staff-photo" alt="Entrenadores FitPower">
           </div>
           <div class="staff-copy">
             <h3 data-i18n="landing.staffText" data-i18n-mode="html">
@@ -66,29 +73,57 @@
         <h4 class="activities-title" data-i18n="landing.activitiesTitle">VEN A HACER TODAS ESTAS ACTIVIDADES</h4>
         <div class="activities-grid">
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 6.png" alt="Musculación">
+            <img src="/imagenes/Rectangle%206.png" alt="Musculación">
             <h3>MUSCULACION</h3>
           </article>
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 8.png" alt="Boxeo">
+            <img src="/imagenes/Rectangle%208.png" alt="Boxeo">
             <h3>BOXEO</h3>
           </article>
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 7.png" alt="Pilates">
+            <img src="/imagenes/Rectangle%207.png" alt="Pilates">
             <h3>PILATES</h3>
           </article>
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 11.png" alt="Zumba">
+            <img src="/imagenes/Rectangle%2011.png" alt="Zumba">
             <h3>ZUMBA</h3>
           </article>
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 12.png" alt="Spinning">
+            <img src="/imagenes/Rectangle%2012.png" alt="Spinning">
             <h3>SPINNING</h3>
           </article>
           <article class="actividad-card">
-            <img src="./imagenes/Rectangle 10.png" alt="Hidrogimnasia">
+            <img src="/imagenes/Rectangle%2010.png" alt="Hidrogimnasia">
             <h3>HIDROGIMNASIA</h3>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section" id="faq">
+      <div class="landing-shell">
+        <h2 class="faq-title" data-i18n="faq.title">PREGUNTAS FRECUENTES</h2>
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary data-i18n="faq.q1">¿Cómo me anoto a una actividad?</summary>
+            <p data-i18n="faq.a1">Iniciá sesión, entrá a tu dashboard y en Próximas clases elegí el día y tocá Anotarse.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q2">¿Puedo hablar con un entrenador?</summary>
+            <p data-i18n="faq.a2">Sí. En tu panel de usuario tenés la sección Mensajes para chatear con los entrenadores.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q3">¿Cuáles son los horarios del gimnasio?</summary>
+            <p data-i18n="faq.a3">Lunes a viernes de 07:00 a 22:00, sábados de 08:00 a 20:00. Domingos cerrado.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q4">¿Hay semana de prueba?</summary>
+            <p data-i18n="faq.a4">Sí. Al sumarte podés recibir tu primera semana gratis. Consultá en recepción o escribinos.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q5">¿Dónde están ubicados?</summary>
+            <p data-i18n="faq.a5">Calle 4 y Diagonal Sur América, Atlántida, Canelones.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -97,7 +132,7 @@
   <div data-site-footer></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="dist/js/site.js"></script>
-  <script src="dist/js/i18n.js"></script>
+  <script src="/dist/js/site.js"></script>
+  <script src="/dist/js/i18n.js"></script>
 </body>
 </html>

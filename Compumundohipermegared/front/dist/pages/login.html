@@ -1,68 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitPower | Login</title>
-    <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/dist/css/loader.css">
-    <link rel="stylesheet" href="/dist/css/login.css">
-    <link rel="stylesheet" href="/dist/css/mobile.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Login</title>
+  <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/css/loader.css">
+  <link rel="stylesheet" href="/dist/css/login.css">
+  <link rel="stylesheet" href="/dist/css/footer.css">
+  <link rel="stylesheet" href="/dist/css/mobile.css">
 </head>
-<body class=" text-white">
- <div class="triangulo"></div>
+<body class="login-body">
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-ring" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
+  <div class="login-glow" aria-hidden="true"></div>
+  <div class="triangulo" aria-hidden="true"></div>
 
+  <header class="login-top">
+    <a class="login-brand" href="/" aria-label="FitPower inicio">FITPOWER</a>
     <button type="button" class="lang-toggle-login" data-lang-toggle data-i18n="lang.label">ES</button>
+  </header>
 
-    <main>
-        <div class="container">
-            <div class="row align-items-start min-vh-100">
-                <div class="col-lg-7">
-                </div>
-                <div class="col-lg-5">
-                    <div class="px-lg-5 pt-lg-4 pb-lg-3 p-4">
-                    <h1 class="inicio mb-5" data-i18n="login.title">LOGIN</h1>
-                    </div>
-                    <div class="px-lg-5 pt-lg-4 pb-lg-3 p-4">
-                        <form id="login-form" novalidate>
-  <div class="mb-3">
-  <label class="visually-hidden" for="usuario" data-i18n="login.user">Nombre de usuario</label>
-  <input type="text" name="usuario" class="form-control input-linea" id="usuario" placeholder="NOMBRE DE USUARIO" data-i18n="login.user" data-i18n-mode="placeholder" autocomplete="username" required>
+  <main class="login-main">
+    <div class="login-panel">
+      <p class="login-kicker">EST. 2024</p>
+      <h1 class="inicio" data-i18n="login.title">LOGIN</h1>
+      <p class="login-sub" data-i18n="login.subtitle">Ingresá para continuar tu entrenamiento.</p>
 
-  </div>
-  <div class="mb-3 password-wrap">
-     <label class="visually-hidden" for="password" data-i18n="login.password">Contraseña</label>
-     <input type="password" name="password" class="form-control input-linea" id="password" placeholder="CONTRASEÑA" data-i18n="login.password" data-i18n-mode="placeholder" autocomplete="current-password" required>
-     <button type="button" class="password-toggle" id="toggle-password" aria-label="Mostrar contraseña" data-i18n="login.showPassword" data-i18n-mode="aria">
-       <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
-         <path fill="currentColor" d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-       </svg>
-       <svg class="icon-eye-off d-none" viewBox="0 0 24 24" aria-hidden="true">
-         <path fill="currentColor" d="M2.1 3.5 3.5 2.1 21.9 20.5 20.5 21.9l-3.1-3.1A12.7 12.7 0 0 1 12 19c-7 0-10-7-10-7a18.6 18.6 0 0 1 5.2-5.5L2.1 3.5zM12 7a5 5 0 0 1 5 5c0 .7-.1 1.3-.4 1.9l-6.5-6.5c.6-.3 1.2-.4 1.9-.4zm-5 5c0-.4.1-.8.2-1.1l6.9 6.9c-.7.1-1.4.2-2.1.2a5 5 0 0 1-5-5zm13.8-2.4A18.7 18.7 0 0 1 22 12s-3 7-10 7c-.7 0-1.3-.1-1.9-.2l1.7-1.7c.1 0 .1 0 .2 0a5 5 0 0 0 5-5c0-.1 0-.1 0-.2l3.8-3.3z"/>
-       </svg>
-     </button>
-  </div>
-
-<p id="login-error" class="mt-3 mb-0" role="alert" hidden></p>
-
-<button type="submit" class="btn btn-login mt-5" id="login-submit" data-i18n="login.submit">LOGIN</button>
-
-</form>
-
-
-                    </div>
-
-                </div>
-            </div>
+      <form id="login-form" novalidate>
+        <div class="mb-3">
+          <label class="visually-hidden" for="usuario" data-i18n="login.user">Nombre de usuario</label>
+          <input type="text" name="usuario" class="form-control input-linea" id="usuario" placeholder="NOMBRE DE USUARIO" data-i18n="login.user" data-i18n-mode="placeholder" autocomplete="username" required>
         </div>
-    </main>
+        <div class="mb-3 password-wrap">
+          <label class="visually-hidden" for="password" data-i18n="login.password">Contraseña</label>
+          <input type="password" name="password" class="form-control input-linea" id="password" placeholder="CONTRASEÑA" data-i18n="login.password" data-i18n-mode="placeholder" autocomplete="current-password" required>
+          <button type="button" class="password-toggle" id="toggle-password" aria-label="Mostrar contraseña" data-i18n="login.showPassword" data-i18n-mode="aria">
+            <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+            <svg class="icon-eye-off d-none" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M2.1 3.5 3.5 2.1 21.9 20.5 20.5 21.9l-3.1-3.1A12.7 12.7 0 0 1 12 19c-7 0-10-7-10-7a18.6 18.6 0 0 1 5.2-5.5L2.1 3.5zM12 7a5 5 0 0 1 5 5c0 .7-.1 1.3-.4 1.9l-6.5-6.5c.6-.3 1.2-.4 1.9-.4zm-5 5c0-.4.1-.8.2-1.1l6.9 6.9c-.7.1-1.4.2-2.1.2a5 5 0 0 1-5-5zm13.8-2.4A18.7 18.7 0 0 1 22 12s-3 7-10 7c-.7 0-1.3-.1-1.9-.2l1.7-1.7c.1 0 .1 0 .2 0a5 5 0 0 0 5-5c0-.1 0-.1 0-.2l3.8-3.3z"/>
+            </svg>
+          </button>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="/dist/js/site.js"></script>
-    <script src="/dist/js/i18n.js"></script>
-    <script src="/dist/js/auth.js"></script>
-    <script src="/dist/js/login.js"></script>
+        <p id="login-error" class="mt-3 mb-0" role="alert" hidden></p>
+
+        <button type="submit" class="btn btn-login mt-4" id="login-submit" data-i18n="login.submit">LOGIN</button>
+      </form>
+
+      <a class="login-back" href="/" data-i18n="login.back">← Volver a FitPower</a>
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="/dist/js/site.js"></script>
+  <script src="/dist/js/i18n.js"></script>
+  <script src="/dist/js/auth.js"></script>
+  <script src="/dist/js/login.js"></script>
 </body>
 </html>

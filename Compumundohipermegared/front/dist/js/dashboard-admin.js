@@ -228,11 +228,15 @@ document.addEventListener('DOMContentLoaded', async function () {
       event.preventDefault();
       try { await apiFetch('/logout', { method: 'POST' }); } catch (err) {}
       clearToken();
-      window.location.href = '/login';
+      window.location.href = '/';
     });
   }
 
   await bindLogout('logout-btn');
   await bindLogout('logout-btn-top');
   await refreshAll();
+
+  if (typeof mountFitpowerChat === 'function') {
+    mountFitpowerChat({ root: '#admin-chat-root' });
+  }
 });

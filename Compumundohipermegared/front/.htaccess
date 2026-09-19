@@ -1,6 +1,8 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+DirectoryIndex index.html
+
 RewriteRule ^login/?$ dist/pages/login.html [L]
 RewriteRule ^dashboard/?$ dist/pages/DashboardUsu.html [L]
 RewriteRule ^dashboard-entrenador/?$ dist/pages/DashboardEntrenador.html [L]
