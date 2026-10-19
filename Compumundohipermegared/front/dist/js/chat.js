@@ -174,25 +174,25 @@
     }
 
     async function loadContacts() {
-      var res = await apiFetch('/contacts');
-      if (!res.ok) throw new Error(res.payload.message || 'No se pudieron cargar contactos.');
-      state.contacts = (res.payload.data && res.payload.data.contacts) || [];
+      var res = await API.request('/contacts');
+      if (res.status !== 'success') throw new Error(res.message || 'No se pudieron cargar contactos.');
+      state.contacts = (res.data && res.data.contacts) || [];
       renderContacts();
     }
 
     async function loadConversations() {
-      var res = await apiFetch('/conversations');
-      if (!res.ok) throw new Error(res.payload.message || 'No se pudieron cargar chats.');
-      state.conversations = (res.payload.data && res.payload.data.conversations) || [];
+      var res = await API.request('/conversations');
+      if (res.status !== 'success') throw new Error(res.message || 'No se pudieron cargar chats.');
+      state.conversations = (res.data && res.data.conversations) || [];
       renderThreads();
     }
 
     async function openConversation(id) {
       state.activeId = id;
       setComposerEnabled(true);
-      var res = await apiFetch('/conversations/' + id + '/messages');
-      if (!res.ok) throw new Error(res.payload.message || 'No se pudieron cargar mensajes.');
-      var data = res.payload.data || {};
+      var res = await API.request('/conversations/' + id + '/messages');
+      if (res.status !== 'success') throw new Error(res.message || 'No se pudieron cargar mensajes.');
+      var data = res.data || {};
       state.messages = data.messages || [];
       state.peer = data.peer || null;
       renderHead();
@@ -201,12 +201,9 @@
     }
 
     async function startWithPeer(peerId) {
-      var res = await apiFetch('/conversations', {
-        method: 'POST',
-        body: JSON.stringify({ peerUserId: Number(peerId) }),
-      });
-      if (!res.ok) throw new Error(res.payload.message || 'No se pudo abrir el chat.');
-      var conv = res.payload.data && res.payload.data.conversation;
+      var res = await API.request('/conversations', 'POST', { peerUserId: Number(peerId) });
+      if (res.status !== 'success') throw new Error(res.message || 'No se pudo abrir el chat.');
+      var conv = res.data && res.data.conversation;
       if (!conv) throw new Error('Respuesta inválida del servidor.');
       state.peer = conv.peer;
       await loadConversations();
@@ -217,16 +214,13 @@
     async function sendMessage(body) {
       if (!state.activeId) return;
       els.send.disabled = true;
-      var res = await apiFetch('/conversations/' + state.activeId + '/messages', {
-        method: 'POST',
-        body: JSON.stringify({ body: body }),
-      });
+      var res = await API.request('/conversations/' + state.activeId + '/messages', 'POST', { body: body });
       els.send.disabled = false;
-      if (!res.ok) {
-        showError(res.payload.message || 'No se pudo enviar.');
+      if (res.status !== 'success') {
+        showError(res.message || 'No se pudo enviar.');
         return;
       }
-      var msg = res.payload.data && res.payload.data.message;
+      var msg = res.data && res.data.message;
       if (msg) {
         state.messages.push(msg);
         renderMessages();
@@ -275,9 +269,9 @@
       try {
         await loadConversations();
         if (state.activeId) {
-          var res = await apiFetch('/conversations/' + state.activeId + '/messages');
-          if (res.ok) {
-            var data = res.payload.data || {};
+          var res = await API.request('/conversations/' + state.activeId + '/messages');
+          if (res.status === 'success') {
+            var data = res.data || {};
             var next = data.messages || [];
             if (next.length !== state.messages.length ||
                 (next.length && state.messages.length &&

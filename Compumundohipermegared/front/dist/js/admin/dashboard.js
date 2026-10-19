@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   async function loadStats() {
-    const { ok, payload } = await apiFetch('/admin/stats');
-    if (!ok) return;
+    const payload = await API.request('/admin/stats');
+    if (payload.status !== 'success') return;
     const data = payload.data || {};
     statUsers.textContent = String(data.users ?? 0);
     statTrainers.textContent = String(data.trainers ?? 0);
@@ -80,12 +80,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     usersTableBody.innerHTML = rows.map(function (user) {
       return (
         '<tr>' +
-          '<td><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
-          '<td>' + user.email + '</td>' +
-          '<td>' + roleLabel(user.role) + '</td>' +
-          '<td><span class="status"><i></i>Activo</span></td>' +
-          '<td>' + formatDate(user.createdAt) + '</td>' +
-          '<td class="row-actions">' +
+          '<td data-label="USUARIO"><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
+          '<td data-label="EMAIL">' + user.email + '</td>' +
+          '<td data-label="ROL">' + roleLabel(user.role) + '</td>' +
+          '<td data-label="ESTADO"><span class="status"><i></i>Activo</span></td>' +
+          '<td data-label="REGISTRO">' + formatDate(user.createdAt) + '</td>' +
+          '<td class="row-actions" data-label="ACCIONES">' +
             '<button type="button" class="circle edit" title="Editar" disabled>✎</button>' +
             '<button type="button" class="circle del" data-delete="' + user.id + '" data-name="' + user.name.replace(/"/g, '&quot;') + '" title="Eliminar">🗑</button>' +
           '</td>' +
@@ -103,11 +103,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     trainersTableBody.innerHTML = rows.map(function (user) {
       return (
         '<tr>' +
-          '<td><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
-          '<td>' + user.email + '</td>' +
-          '<td>General</td>' +
-          '<td><span class="status"><i></i>Activo</span></td>' +
-          '<td class="row-actions">' +
+          '<td data-label="ENTRENADOR"><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
+          '<td data-label="EMAIL">' + user.email + '</td>' +
+          '<td data-label="ESPECIALIDAD">General</td>' +
+          '<td data-label="ESTADO"><span class="status"><i></i>Activo</span></td>' +
+          '<td class="row-actions" data-label="ACCIONES">' +
             '<button type="button" class="circle edit" title="Editar" disabled>✎</button>' +
             '<button type="button" class="circle del" data-delete="' + user.id + '" data-name="' + user.name.replace(/"/g, '&quot;') + '" title="Eliminar">🗑</button>' +
           '</td>' +
@@ -120,8 +120,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     hideError(usersError);
     const q = (searchUsers.value || '').trim();
     const roleParam = usersFilter === 'all' ? '' : ('&role=' + encodeURIComponent(usersFilter));
-    const { ok, payload } = await apiFetch('/admin/users?q=' + encodeURIComponent(q) + roleParam);
-    if (!ok) {
+    const payload = await API.request('/admin/users?q=' + encodeURIComponent(q) + roleParam);
+    if (payload.status !== 'success') {
       showError(usersError, payload.message || 'No se pudieron cargar los usuarios.');
       usersTableBody.innerHTML = '<tr><td colspan="6">Error al cargar.</td></tr>';
       return;
@@ -131,8 +131,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   async function loadTrainers() {
-    const { ok, payload } = await apiFetch('/admin/users?role=entrenador');
-    if (!ok) {
+    const payload = await API.request('/admin/users?role=entrenador');
+    if (payload.status !== 'success') {
       trainersTableBody.innerHTML = '<tr><td colspan="5">Error al cargar.</td></tr>';
       return;
     }
@@ -181,8 +181,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       return;
     }
     btn.disabled = true;
-    const { ok, payload } = await apiFetch('/admin/users/' + id, { method: 'DELETE' });
-    if (!ok) {
+    const payload = await API.request('/admin/users/' + id, 'DELETE');
+    if (payload.status !== 'success') {
       alert(payload.message || 'No se pudo eliminar.');
       btn.disabled = false;
       return;
@@ -203,11 +203,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         password: document.getElementById('userPassword').value,
         role: document.getElementById('userRole').value,
       };
-      const { ok, payload } = await apiFetch('/admin/users', {
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-      if (!ok) {
+      const payload = await API.request('/admin/users', 'POST', body);
+      if (payload.status !== 'success') {
         showError(modalError, payload.message || 'No se pudo crear el usuario.');
         return;
       }
@@ -226,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (!el) return;
     el.addEventListener('click', async function (event) {
       event.preventDefault();
-      try { await apiFetch('/logout', { method: 'POST' }); } catch (err) {}
+      try { await API.request('/logout', 'POST'); } catch (err) {}
       clearToken();
       window.location.href = '/';
     });
@@ -234,6 +231,52 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   await bindLogout('logout-btn');
   await bindLogout('logout-btn-top');
+
+  let currentUser = { name: 'Administrador', email: '', role: 'admin' };
+  try {
+    const me = await API.request('/me');
+    if (me.status === 'success' && me.data && me.data.user) {
+      currentUser = me.data.user;
+      const sideName = document.querySelector('.sidebar-user strong');
+      const sideAvatar = document.querySelector('.sidebar-user .avatar');
+      if (sideName && currentUser.name) sideName.textContent = currentUser.name.toUpperCase();
+      if (sideAvatar && currentUser.name) sideAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+    }
+  } catch (err) {
+    // se mantiene el placeholder
+  }
+
+  if (typeof mountFitpowerSettings === 'function') {
+    mountFitpowerSettings({
+      role: 'admin',
+      user: currentUser,
+      onProfileSave: function (profile) {
+        const sideName = document.querySelector('.sidebar-user strong');
+        const sideAvatar = document.querySelector('.sidebar-user .avatar');
+        if (sideName) sideName.textContent = (profile.name || 'ADMIN').toUpperCase();
+        if (sideAvatar) sideAvatar.textContent = (profile.name || 'A').charAt(0).toUpperCase();
+      },
+    });
+  }
+
+  document.querySelectorAll('[data-jump]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const target = document.querySelector(btn.getAttribute('data-jump'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const payDetail = document.getElementById('payDetail');
+  const pagos = document.getElementById('pagos');
+  if (pagos && payDetail) {
+    pagos.addEventListener('click', function (event) {
+      const btn = event.target.closest('[data-pay]');
+      if (!btn) return;
+      payDetail.hidden = false;
+      payDetail.textContent = btn.getAttribute('data-pay');
+    });
+  }
+
   await refreshAll();
 
   if (typeof mountFitpowerChat === 'function') {

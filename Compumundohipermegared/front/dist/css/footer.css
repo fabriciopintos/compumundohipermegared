@@ -83,6 +83,7 @@
 }
 
 .site-footer-mapa {
+  display: block;
   width: 100%;
   height: 148px;
   border-radius: 10px;
@@ -91,13 +92,22 @@
   background: #111;
   margin-bottom: 10px;
   box-shadow: 0 0 24px rgba(109, 40, 217, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.site-footer-mapa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(139, 69, 245, 0.35);
+}
+
+.site-footer-mapa img,
 .site-footer-mapa iframe {
   width: 100%;
   height: 100%;
   border: 0;
-  filter: grayscale(0.25) contrast(1.12) brightness(0.9);
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.15) contrast(1.08) brightness(0.92);
 }
 
 .site-footer-copy {

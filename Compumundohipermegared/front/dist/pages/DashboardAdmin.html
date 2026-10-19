@@ -7,9 +7,11 @@
   <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/dist/css/loader.css">
-  <link rel="stylesheet" href="/dist/css/dashboard-admin.css">
-  <link rel="stylesheet" href="/dist/css/chat.css">
-  <link rel="stylesheet" href="/dist/css/footer.css">
+  <link rel="stylesheet" href="/dist/css/dashboard-admin.css?v=4">
+  <link rel="stylesheet" href="/dist/css/settings.css?v=6">
+  <link rel="stylesheet" href="/dist/css/chat.css?v=4">
+  <link rel="stylesheet" href="/dist/css/footer.css?v=4">
+  <link rel="stylesheet" href="/dist/css/responsive.css?v=4">
 </head>
 <body>
   <div id="site-loader" aria-busy="true" aria-live="polite">
@@ -25,8 +27,9 @@
     }
   </script>
 
+  <div class="sidebar-backdrop" data-sidebar-backdrop hidden></div>
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" data-sidebar>
       <div class="brand">
         <a class="brand-title" href="/">FITPOWER</a>
         <div class="brand-sub">PANEL DE ADMINISTRADOR</div>
@@ -37,12 +40,12 @@
         <a class="nav-item" href="#usuarios">USUARIOS</a>
         <a class="nav-item" href="#entrenadores">ENTRENADORES</a>
         <a class="nav-item" href="#pagos">PAGOS</a>
-        <a class="nav-item" href="#acciones">SUSCRIPCIONES</a>
-        <a class="nav-item" href="#acciones">ACTIVIDADES</a>
-        <a class="nav-item" href="#acciones">REPORTES</a>
-        <a class="nav-item" href="#acciones">CONFIGURACIÓN</a>
+        <a class="nav-item" href="#suscripciones">SUSCRIPCIONES</a>
+        <a class="nav-item" href="#actividades">ACTIVIDADES</a>
+        <a class="nav-item" href="#reportes">REPORTES</a>
+        <a class="nav-item" href="#configuracion" data-open-settings>CONFIGURACIÓN</a>
         <a class="nav-item" href="#mensajes">MENSAJES</a>
-        <a class="nav-item" href="#acciones">NOTIFICACIONES</a>
+        <a class="nav-item" href="#notificaciones">NOTIFICACIONES</a>
       </nav>
 
       <div class="quick-box">
@@ -50,7 +53,7 @@
         <button type="button" data-open-create="usuario">Nuevo Usuario</button>
         <button type="button" data-open-create="entrenador">Nuevo Entrenador</button>
         <a href="#pagos">Gestionar Pagos</a>
-        <a href="#acciones">Ver Reportes</a>
+        <a href="#reportes">Ver Reportes</a>
       </div>
 
       <div class="sidebar-user">
@@ -70,8 +73,8 @@
           <p>Gestioná usuarios, entrenadores, pagos y toda la plataforma.</p>
         </div>
         <div class="top-actions">
-          <button class="icon-btn" type="button">☰</button>
-          <button class="icon-btn" type="button">🔔<i></i></button>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-label="Menú">☰</button>
+          <a class="icon-btn" href="#notificaciones" aria-label="Notificaciones">🔔<i></i></a>
           <a class="salir" href="/" id="logout-btn-top">SALIR</a>
         </div>
       </header>
@@ -117,7 +120,7 @@
             </div>
           </div>
           <div class="table-wrap">
-            <table>
+            <table class="table-cards">
               <thead>
                 <tr>
                   <th>USUARIO</th>
@@ -142,7 +145,7 @@
             <button type="button" class="btn-main" data-open-create="entrenador">+ NUEVO ENTRENADOR</button>
           </div>
           <div class="table-wrap">
-            <table>
+            <table class="table-cards">
               <thead>
                 <tr>
                   <th>ENTRENADOR</th>
@@ -168,7 +171,7 @@
             <article><strong>7</strong><span>Fallidos</span></article>
           </div>
           <div class="table-wrap">
-            <table>
+            <table class="table-cards">
               <thead>
                 <tr>
                   <th>USUARIO</th>
@@ -182,23 +185,62 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>María López</td><td>Premium</td><td>$ 2.500</td><td>Visa</td>
-                  <td><span class="badge ok">Completado</span></td><td>10/09/2026</td>
-                  <td><button type="button" class="btn-sm">VER</button></td>
+                  <td data-label="USUARIO">María López</td><td data-label="PLAN">Premium</td><td data-label="MONTO">$ 2.500</td><td data-label="MÉTODO">Visa</td>
+                  <td data-label="ESTADO"><span class="badge ok">Completado</span></td><td data-label="FECHA">10/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm" data-pay="María López · Premium · $ 2.500 · Completado">VER</button></td>
                 </tr>
                 <tr>
-                  <td>Juan Pérez</td><td>Básico</td><td>$ 1.200</td><td>Mastercard</td>
-                  <td><span class="badge warn">Pendiente</span></td><td>09/09/2026</td>
-                  <td><button type="button" class="btn-sm">VER</button></td>
+                  <td data-label="USUARIO">Juan Pérez</td><td data-label="PLAN">Básico</td><td data-label="MONTO">$ 1.200</td><td data-label="MÉTODO">Mastercard</td>
+                  <td data-label="ESTADO"><span class="badge warn">Pendiente</span></td><td data-label="FECHA">09/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm" data-pay="Juan Pérez · Básico · $ 1.200 · Pendiente">VER</button></td>
                 </tr>
                 <tr>
-                  <td>Lucía Díaz</td><td>Premium</td><td>$ 2.500</td><td>Visa</td>
-                  <td><span class="badge bad">Fallido</span></td><td>08/09/2026</td>
-                  <td><button type="button" class="btn-sm">VER</button></td>
+                  <td data-label="USUARIO">Lucía Díaz</td><td data-label="PLAN">Premium</td><td data-label="MONTO">$ 2.500</td><td data-label="MÉTODO">Visa</td>
+                  <td data-label="ESTADO"><span class="badge bad">Fallido</span></td><td data-label="FECHA">08/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm" data-pay="Lucía Díaz · Premium · $ 2.500 · Fallido">VER</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <p id="payDetail" class="chat-section-sub" hidden></p>
+        </section>
+
+        <section class="panel" id="suscripciones">
+          <div class="panel-head"><h2>SUSCRIPCIONES</h2></div>
+          <div class="mini-stats">
+            <article><strong>856</strong><span>Activas</span></article>
+            <article><strong>Premium</strong><span>Plan más elegido</span></article>
+            <article><strong>$ 2.500</strong><span>Precio premium</span></article>
+            <article><strong>$ 1.200</strong><span>Precio básico</span></article>
+          </div>
+        </section>
+
+        <section class="panel" id="actividades">
+          <div class="panel-head"><h2>ACTIVIDADES</h2></div>
+          <div class="actions-grid">
+            <div class="tile"><span>🥊</span>Boxeo</div>
+            <div class="tile"><span>🧘</span>Pilates</div>
+            <div class="tile"><span>💃</span>Zumba</div>
+            <div class="tile"><span>🏊</span>Hidrogimnasia</div>
+          </div>
+        </section>
+
+        <section class="panel" id="reportes">
+          <div class="panel-head"><h2>REPORTES</h2></div>
+          <div class="mini-stats">
+            <article><strong>$ 125.430</strong><span>Ingresos del mes</span></article>
+            <article><strong>+18%</strong><span>Contra el mes anterior</span></article>
+            <article><strong>142</strong><span>Pagos completados</span></article>
+            <article><strong>7</strong><span>Pagos fallidos</span></article>
+          </div>
+        </section>
+
+        <section class="panel" id="notificaciones">
+          <div class="panel-head"><h2>NOTIFICACIONES</h2></div>
+          <ul class="note-list">
+            <li><strong>Pago pendiente</strong><span>Juan Pérez · Básico · $ 1.200</span></li>
+            <li><strong>Pago fallido</strong><span>Lucía Díaz · Premium · $ 2.500</span></li>
+          </ul>
         </section>
 
         <section class="panel" id="mensajes">
@@ -212,8 +254,8 @@
           <div class="actions-grid">
             <button type="button" data-open-create="usuario"><span>＋</span>Nuevo Usuario</button>
             <button type="button" data-open-create="entrenador"><span>🏋</span>Nuevo Entrenador</button>
-            <button type="button"><span>🏷</span>Planes y Precios</button>
-            <button type="button"><span>▤</span>Reportes</button>
+            <button type="button" data-jump="#suscripciones"><span>🏷</span>Planes y Precios</button>
+            <button type="button" data-jump="#reportes"><span>▤</span>Reportes</button>
           </div>
         </section>
       </main>
@@ -255,9 +297,12 @@
     </div>
   </div>
 
-  <script src="/dist/js/site.js"></script>
-  <script src="/dist/js/auth.js"></script>
-  <script src="/dist/js/chat.js"></script>
-  <script src="/dist/js/dashboard-admin.js"></script>
+  <script src="/dist/js/site.js?v=4"></script>
+  <script src="/dist/js/shell.js?v=5"></script>
+  <script src="/dist/js/api.js?v=4"></script>
+  <script src="/dist/js/auth.js?v=4"></script>
+  <script src="/dist/js/chat.js?v=4"></script>
+  <script src="/dist/js/settings.js?v=5"></script>
+  <script src="/dist/js/admin/dashboard.js?v=7"></script>
 </body>
 </html>

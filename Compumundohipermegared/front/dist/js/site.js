@@ -1,5 +1,5 @@
 (function () {
-  var MIN_LOADER_MS = 2000;
+  var MIN_LOADER_MS = 350;
   var FADE_MS = 450;
   var shownAt = window.__fpLoaderAt || 0;
   var hideScheduled = false;
@@ -74,13 +74,13 @@
           '</div>' +
           '<div>' +
             '<h3 class="site-footer-title">UBICACION</h3>' +
-            '<div class="site-footer-mapa">' +
-              '<iframe src="https://www.google.com/maps?q=Calle+4+y+Diagonal+Sur+America,+Atl%C3%A1ntida,+Canelones,+Uruguay&output=embed" loading="lazy" title="Ubicación de FitPower"></iframe>' +
-            '</div>' +
+            '<a class="site-footer-mapa" href="https://www.google.com/maps?q=Calle+4+y+Diagonal+Sur+America,+Atl%C3%A1ntida,+Canelones,+Uruguay" target="_blank" rel="noopener noreferrer" aria-label="Abrir ubicación de FitPower en el mapa">' +
+              '<img src="/imagenes/Rectangle%2035.png" alt="Mapa de FitPower en Atlántida" width="480" height="280" loading="lazy" decoding="async">' +
+            '</a>' +
             '<p class="site-footer-text">Calle 4 y Diagonal Sur América, Atlántida, Canelones</p>' +
           '</div>' +
         '</div>' +
-        '<div class="site-footer-copy">© 2026 FITPOWER. Todos los derechos reservados.</div>' +
+        '<div class="site-footer-copy">© 2026 FITPOWER. Todos los derechos reservados. Design By UAtlan</div>' +
       '</footer>'
     );
   }
@@ -96,6 +96,7 @@
     ensureLoader();
     markLoaderShown();
     injectFooter();
+    scheduleHideLoader();
   }
 
   if (document.readyState === 'loading') {
@@ -104,12 +105,5 @@
     boot();
   }
 
-  if (document.readyState === 'complete') {
-    scheduleHideLoader();
-  } else {
-    window.addEventListener('load', scheduleHideLoader);
-  }
-
-  // Seguridad: nunca dejar el loader más de 6s
-  window.setTimeout(scheduleHideLoader, 6000);
+  window.setTimeout(scheduleHideLoader, 2500);
 })();

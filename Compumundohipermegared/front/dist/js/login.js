@@ -11,6 +11,20 @@ document.addEventListener('DOMContentLoaded', async function () {
   const togglePassword = document.getElementById('toggle-password');
   const eyeOpen = togglePassword.querySelector('.icon-eye');
   const eyeOff = togglePassword.querySelector('.icon-eye-off');
+  const capsWarning = document.getElementById('caps-warning');
+
+  function updateCaps(event) {
+    if (!capsWarning) return;
+    const on = event.getModifierState && event.getModifierState('CapsLock');
+    capsWarning.hidden = !on;
+  }
+
+  password.addEventListener('keydown', updateCaps);
+  password.addEventListener('keyup', updateCaps);
+  password.addEventListener('focus', updateCaps);
+  password.addEventListener('blur', function () {
+    if (capsWarning) capsWarning.hidden = true;
+  });
 
   function showError(message) {
     errorBox.hidden = false;
@@ -46,15 +60,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     submitBtn.textContent = t('login.loading');
 
     try {
-      const { ok, payload } = await apiFetch('/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          usuario: loginValue,
-          password: passwordValue,
-        }),
+      const payload = await API.request('/login', 'POST', {
+        usuario: loginValue,
+        password: passwordValue,
       });
 
-      if (!ok || !payload.data || !payload.data.token) {
+      if (payload.status !== 'success' || !payload.data || !payload.data.token) {
         showError(payload.message || t('login.error'));
         return;
       }

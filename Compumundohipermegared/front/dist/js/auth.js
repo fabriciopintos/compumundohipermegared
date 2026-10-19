@@ -32,36 +32,6 @@ function dashboardPathForRole(role) {
   return '/dashboard';
 }
 
-function authHeaders(extra) {
-  const headers = Object.assign({ 'Content-Type': 'application/json' }, extra || {});
-  const token = getToken();
-  if (token) {
-    headers.Authorization = 'Bearer ' + token;
-  }
-  return headers;
-}
-
-async function apiFetch(path, options) {
-  const config = options ? Object.assign({}, options) : {};
-  config.headers = authHeaders(config.headers);
-  const response = await fetch('/api' + path, config);
-  let payload = {};
-  try {
-    payload = await response.json();
-  } catch (err) {
-    payload = { status: 'error', message: 'No se pudo leer la respuesta del servidor.' };
-  }
-  if (response.status === 401) {
-    clearToken();
-    const path = window.location.pathname || '';
-    const isPublic = path === '/' || path.endsWith('/login') || path.includes('login.html') || path.endsWith('index.html');
-    if (!isPublic) {
-      window.location.href = '/';
-    }
-  }
-  return { ok: response.ok, status: response.status, payload };
-}
-
 function requireAuth() {
   if (!getToken()) {
     window.location.replace('/login');
@@ -78,8 +48,8 @@ async function requireRole(allowedRoles) {
   let role = getRole();
   if (!role) {
     try {
-      const { ok, payload } = await apiFetch('/me');
-      if (ok && payload.data && payload.data.user) {
+      const payload = await API.request('/me');
+      if (payload.status === 'success' && payload.data && payload.data.user) {
         role = payload.data.user.role || '';
         setRole(role);
       }
@@ -101,19 +71,18 @@ async function redirectIfAuthenticated() {
     return false;
   }
 
-  let role = getRole();
-  if (!role) {
-    try {
-      const { ok, payload } = await apiFetch('/me');
-      if (ok && payload.data && payload.data.user) {
-        role = payload.data.user.role || 'usuario';
-        setRole(role);
-      }
-    } catch (err) {
-      role = 'usuario';
+  try {
+    const payload = await API.request('/me');
+    if (payload.status === 'success' && payload.data && payload.data.user) {
+      const role = payload.data.user.role || getRole() || 'usuario';
+      setRole(role);
+      window.location.replace(dashboardPathForRole(role));
+      return true;
     }
+  } catch (err) {
+    // la sesión no se pudo confirmar
   }
 
-  window.location.replace(dashboardPathForRole(role));
-  return true;
+  clearToken();
+  return false;
 }
