@@ -1,8 +1,14 @@
 (function () {
-  var MIN_LOADER_MS = 350;
-  var FADE_MS = 450;
+  var MIN_LOADER_MS = 320;
+  var FADE_MS = 420;
+  var PAGE_LEAVE_MS = 200;
   var shownAt = window.__fpLoaderAt || 0;
   var hideScheduled = false;
+  var leaving = false;
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
 
   function ensureFavicon() {
     if (document.querySelector('link[rel="icon"]')) return;
@@ -21,8 +27,9 @@
     loader.setAttribute('aria-live', 'polite');
     loader.innerHTML =
       '<div class="site-loader-inner">' +
-        '<div class="site-loader-ring" aria-hidden="true"></div>' +
+        '<div class="site-loader-orb" aria-hidden="true"></div>' +
         '<div class="site-loader-brand">FITPOWER</div>' +
+        '<div class="site-loader-bar" aria-hidden="true"><i></i></div>' +
       '</div>';
     document.body.prepend(loader);
     shownAt = Date.now();
@@ -53,13 +60,23 @@
     window.setTimeout(hideLoaderNow, wait);
   }
 
+  function homeHref() {
+    var role = '';
+    try { role = localStorage.getItem('fitpower_role') || ''; } catch (err) {}
+    if (role === 'entrenador') return '/dashboard-entrenador';
+    if (role === 'admin') return '/dashboard-admin';
+    if (role === 'usuario' || localStorage.getItem('fitpower_token')) return '/dashboard';
+    return '/';
+  }
+
   function footerHtml() {
+    var brandHref = homeHref();
     return (
-      '<footer class="site-footer" data-shared-footer>' +
+      '<footer class="site-footer fp-reveal" data-shared-footer>' +
         '<div class="pincelada izq"></div>' +
         '<div class="pincelada der"></div>' +
         '<div class="site-footer-inner">' +
-          '<div><a class="site-footer-brand" href="/">FITPOWER</a></div>' +
+          '<div><a class="site-footer-brand" href="' + brandHref + '">FITPOWER</a></div>' +
           '<div>' +
             '<h3 class="site-footer-title">CONTACTO</h3>' +
             '<p class="site-footer-text">contacto@fitpower.com</p>' +
@@ -91,11 +108,115 @@
     mount.outerHTML = footerHtml();
   }
 
+  function markPageEnter() {
+    if (prefersReducedMotion()) {
+      document.documentElement.classList.add('fp-page-ready');
+      return;
+    }
+    document.documentElement.classList.add('fp-page-enter');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.add('fp-page-ready');
+      });
+    });
+  }
+
+  function setupReveal() {
+    var nodes = document.querySelectorAll([
+      'main > section',
+      'main .hero',
+      'main .panel',
+      'main .stats > *',
+      'main .info-card',
+      'main .plan-card',
+      'main .actividad-item',
+      'main .routine-row',
+      'main .activity-row',
+      'main .today-card',
+      'main .checkout-summary',
+      'main .checkout-form',
+      'main .rutinas-side',
+      'main .rutinas-panel',
+      '.landing-header .hero-grid > *',
+      '.staff-card',
+      '.faq-item',
+      '.activities-grid > *',
+      '.site-footer',
+    ].join(','));
+
+    if (!nodes.length) return;
+
+    if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
+      nodes.forEach(function (el) { el.classList.add('fp-reveal', 'is-in'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+    nodes.forEach(function (el, index) {
+      el.classList.add('fp-reveal');
+      var delay = Math.min(5, (index % 6));
+      if (delay > 0) el.classList.add('fp-reveal-delay-' + delay);
+      io.observe(el);
+    });
+  }
+
+  function samePageHash(url) {
+    return url.origin === location.origin
+      && url.pathname === location.pathname
+      && url.search === location.search
+      && !!url.hash;
+  }
+
+  function setupPageTransitions() {
+    if (prefersReducedMotion()) return;
+
+    document.addEventListener('click', function (event) {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      var link = event.target.closest('a[href]');
+      if (!link) return;
+      if (link.target && link.target !== '_self') return;
+      if (link.hasAttribute('download')) return;
+      if (link.hasAttribute('data-open-settings')) return;
+      if (link.hasAttribute('data-open-notifications')) return;
+      if (link.hasAttribute('data-notif-close')) return;
+
+      var raw = link.getAttribute('href');
+      if (!raw || raw.charAt(0) === '#' || raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0 || raw.indexOf('javascript:') === 0) {
+        return;
+      }
+
+      var url;
+      try { url = new URL(raw, location.href); } catch (err) { return; }
+      if (url.origin !== location.origin) return;
+      if (samePageHash(url)) return;
+      if (leaving) return;
+
+      event.preventDefault();
+      leaving = true;
+      document.documentElement.classList.add('fp-page-leave');
+      window.setTimeout(function () {
+        location.href = url.href;
+      }, PAGE_LEAVE_MS);
+    }, true);
+  }
+
   function boot() {
+    markPageEnter();
     ensureFavicon();
     ensureLoader();
     markLoaderShown();
     injectFooter();
+    setupReveal();
+    setupPageTransitions();
     scheduleHideLoader();
   }
 

@@ -82,4 +82,52 @@ class AuthModel {
         $stmt->execute([':user_id' => $userId]);
         return (int) $stmt->fetchColumn();
     }
+
+    public function emailTakenByOther(string $email, int $userId): bool {
+        $stmt = $this->db->prepare(
+            'SELECT id FROM users WHERE LOWER(email) = LOWER(:email) AND id <> :id LIMIT 1'
+        );
+        $stmt->execute([':email' => $email, ':id' => $userId]);
+        return (bool) $stmt->fetchColumn();
+    }
+
+    public function updateProfile(int $userId, string $name, string $email): bool {
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET name = :name,
+                 email = :email,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            ':id' => $userId,
+            ':name' => $name,
+            ':email' => $email,
+        ]);
+        return $stmt->rowCount() >= 0;
+    }
+
+    public function findAuthById(int $id): ?array {
+        $stmt = $this->db->prepare(
+            'SELECT id, name, email, password_hash, role
+             FROM users WHERE id = :id LIMIT 1'
+        );
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
+
+    public function updatePassword(int $userId, string $passwordHash): bool {
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET password_hash = :password_hash,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            ':id' => $userId,
+            ':password_hash' => $passwordHash,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
 }

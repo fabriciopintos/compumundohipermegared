@@ -7,8 +7,9 @@
   <meta name="description" content="Tus rutinas de entrenamiento en FitPower.">
   <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/dist/css/loader.css">
-  <link rel="stylesheet" href="/dist/css/dashboard.css?v=5">
+  <link rel="stylesheet" href="/dist/css/loader.css?v=3">
+  <link rel="stylesheet" href="/dist/css/motion.css?v=2">
+  <link rel="stylesheet" href="/dist/css/dashboard.css?v=10">
   <link rel="stylesheet" href="/dist/css/rutinas.css?v=2">
   <link rel="stylesheet" href="/dist/css/settings.css?v=6">
   <link rel="stylesheet" href="/dist/css/footer.css?v=4">
@@ -17,8 +18,9 @@
 <body class="dash-user-body">
   <div id="site-loader" aria-busy="true" aria-live="polite">
     <div class="site-loader-inner">
-      <div class="site-loader-ring" aria-hidden="true"></div>
+      <div class="site-loader-orb" aria-hidden="true"></div>
       <div class="site-loader-brand">FITPOWER</div>
+      <div class="site-loader-bar" aria-hidden="true"><i></i></div>
     </div>
   </div>
   <script>window.__fpLoaderAt = Date.now();</script>
@@ -30,13 +32,13 @@
 
   <nav class="navbar-fitpower">
     <div class="dash-shell nav-shell">
-      <a class="brand-title" href="/">FITPOWER</a>
+      <a class="brand-title" href="/dashboard">FITPOWER</a>
       <button type="button" class="lang-toggle" data-lang-toggle data-i18n="lang.label">ES</button>
       <button class="nav-burger" type="button" id="navBurger" aria-label="Menú" aria-expanded="false" aria-controls="navLinks">☰</button>
       <ul class="nav-links" id="navLinks">
         <li><a class="active" href="/rutinas" data-i18n="nav.routines">RUTINAS</a></li>
         <li><a href="/dashboard#actividades" data-i18n="nav.activities">ACTIVIDADES</a></li>
-        <li><a href="/dashboard#planes" data-i18n="nav.plans">PLANES</a></li>
+        <li><a href="/planes" data-i18n="nav.plans">PLANES</a></li>
         <li><a href="/dashboard#mensajes" data-i18n="nav.messages">MENSAJES</a></li>
         <li><a href="#configuracion" data-open-settings data-i18n="nav.settings">CONFIGURACIÓN</a></li>
         <li><a href="/" id="logout-btn" data-i18n="nav.logout">SALIR</a></li>
@@ -44,17 +46,8 @@
     </div>
   </nav>
 
-  <main class="dash-shell">
-    <header class="hero" id="contenido" style="padding-bottom: 12px;">
-      <div class="hero-copy" style="text-align: left;">
-        <h1>
-          <span class="welcome-line" data-i18n="dash.routines">RUTINAS</span>
-          <span class="usuario" id="nombreUsuario">“USUARIO”</span>
-        </h1>
-      </div>
-    </header>
-
-    <section id="rutinas" class="block-rutinas">
+  <main class="dash-shell" id="contenido">
+    <section id="rutinas" class="block-rutinas" style="padding-top: 28px;">
       <div class="rutinas-layout">
         <aside class="rutinas-side" aria-label="Lista de rutinas">
           <h2 class="rutinas-side-title" data-i18n="dash.routines">RUTINAS</h2>
@@ -79,11 +72,11 @@
 
   <div data-site-footer></div>
 
-  <script src="/dist/js/site.js?v=4"></script>
-  <script src="/dist/js/i18n.js?v=6"></script>
-  <script src="/dist/js/api.js?v=4"></script>
+  <script src="/dist/js/site.js?v=6"></script>
+  <script src="/dist/js/i18n.js?v=7"></script>
+  <script src="/dist/js/api.js?v=5"></script>
   <script src="/dist/js/auth.js?v=4"></script>
-  <script src="/dist/js/settings.js?v=5"></script>
-  <script src="/dist/js/usuario/rutinas.js?v=2"></script>
+  <script src="/dist/js/settings.js?v=6"></script>
+  <script src="/dist/js/usuario/rutinas.js?v=4"></script>
 </body>
 </html>

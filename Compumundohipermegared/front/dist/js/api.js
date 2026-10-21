@@ -25,7 +25,21 @@ const API = {
 
         try {
             const respuesta = await fetch(url, opciones);
-            const json = await respuesta.json();
+            const raw = await respuesta.text();
+            let json = null;
+            if (raw) {
+                try {
+                    json = JSON.parse(raw);
+                } catch (parseErr) {
+                    console.error('Respuesta no JSON de la API:', parseErr);
+                    return {
+                        status: 'error',
+                        message: 'La API devolvió una respuesta inválida (' + respuesta.status + ')',
+                    };
+                }
+            } else {
+                json = { status: 'error', message: 'Respuesta vacía de la API (' + respuesta.status + ')' };
+            }
             if (respuesta.status === 401 && endpoint !== '/login') {
                 localStorage.removeItem('fitpower_token');
                 localStorage.removeItem('fitpower_role');

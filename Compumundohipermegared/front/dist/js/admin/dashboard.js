@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     return 'Usuario';
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function initial(name) {
     return (name || '?').trim().charAt(0).toUpperCase();
   }
@@ -78,16 +87,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     usersTableBody.innerHTML = rows.map(function (user) {
+      const safeName = escapeHtml(user.name);
+      const safeEmail = escapeHtml(user.email);
       return (
         '<tr>' +
-          '<td data-label="USUARIO"><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
-          '<td data-label="EMAIL">' + user.email + '</td>' +
-          '<td data-label="ROL">' + roleLabel(user.role) + '</td>' +
+          '<td data-label="USUARIO"><div class="user-cell"><span class="mini-av">' + escapeHtml(initial(user.name)) + '</span>' + safeName + '</div></td>' +
+          '<td data-label="EMAIL">' + safeEmail + '</td>' +
+          '<td data-label="ROL">' + escapeHtml(roleLabel(user.role)) + '</td>' +
           '<td data-label="ESTADO"><span class="status"><i></i>Activo</span></td>' +
-          '<td data-label="REGISTRO">' + formatDate(user.createdAt) + '</td>' +
+          '<td data-label="REGISTRO">' + escapeHtml(formatDate(user.createdAt)) + '</td>' +
           '<td class="row-actions" data-label="ACCIONES">' +
             '<button type="button" class="circle edit" title="Editar" disabled>✎</button>' +
-            '<button type="button" class="circle del" data-delete="' + user.id + '" data-name="' + user.name.replace(/"/g, '&quot;') + '" title="Eliminar">🗑</button>' +
+            '<button type="button" class="circle del" data-delete="' + escapeHtml(user.id) + '" data-name="' + safeName + '" title="Eliminar">🗑</button>' +
           '</td>' +
         '</tr>'
       );
@@ -101,15 +112,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     trainersTableBody.innerHTML = rows.map(function (user) {
+      const safeName = escapeHtml(user.name);
+      const safeEmail = escapeHtml(user.email);
       return (
         '<tr>' +
-          '<td data-label="ENTRENADOR"><div class="user-cell"><span class="mini-av">' + initial(user.name) + '</span>' + user.name + '</div></td>' +
-          '<td data-label="EMAIL">' + user.email + '</td>' +
+          '<td data-label="ENTRENADOR"><div class="user-cell"><span class="mini-av">' + escapeHtml(initial(user.name)) + '</span>' + safeName + '</div></td>' +
+          '<td data-label="EMAIL">' + safeEmail + '</td>' +
           '<td data-label="ESPECIALIDAD">General</td>' +
           '<td data-label="ESTADO"><span class="status"><i></i>Activo</span></td>' +
           '<td class="row-actions" data-label="ACCIONES">' +
             '<button type="button" class="circle edit" title="Editar" disabled>✎</button>' +
-            '<button type="button" class="circle del" data-delete="' + user.id + '" data-name="' + user.name.replace(/"/g, '&quot;') + '" title="Eliminar">🗑</button>' +
+            '<button type="button" class="circle del" data-delete="' + escapeHtml(user.id) + '" data-name="' + safeName + '" title="Eliminar">🗑</button>' +
           '</td>' +
         '</tr>'
       );

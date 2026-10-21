@@ -6,8 +6,9 @@
   <title>FitPower | Panel de Entrenador</title>
   <link rel="icon" type="image/svg+xml" href="/imagenes/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/dist/css/loader.css">
-  <link rel="stylesheet" href="/dist/css/dashboard-entrenador.css?v=4">
+  <link rel="stylesheet" href="/dist/css/loader.css?v=3">
+  <link rel="stylesheet" href="/dist/css/motion.css?v=2">
+  <link rel="stylesheet" href="/dist/css/dashboard-entrenador.css?v=6">
   <link rel="stylesheet" href="/dist/css/settings.css?v=6">
   <link rel="stylesheet" href="/dist/css/chat.css?v=4">
   <link rel="stylesheet" href="/dist/css/footer.css?v=4">
@@ -16,8 +17,9 @@
 <body>
   <div id="site-loader" aria-busy="true" aria-live="polite">
     <div class="site-loader-inner">
-      <div class="site-loader-ring" aria-hidden="true"></div>
+      <div class="site-loader-orb" aria-hidden="true"></div>
       <div class="site-loader-brand">FITPOWER</div>
+      <div class="site-loader-bar" aria-hidden="true"><i></i></div>
     </div>
   </div>
   <script>window.__fpLoaderAt = Date.now();</script>
@@ -31,12 +33,13 @@
   <div class="layout">
     <aside class="sidebar" data-sidebar>
       <div class="brand">
-        <a class="brand-title" href="/">FITPOWER</a>
+        <a class="brand-title" href="/dashboard-entrenador">FITPOWER</a>
         <div class="brand-sub">PANEL DE ENTRENADOR</div>
       </div>
       <nav class="nav">
         <a class="nav-item active" href="#inicio"><span class="ico">⌂</span> Inicio</a>
         <a class="nav-item" href="#actividades"><span class="ico">▦</span> Actividades</a>
+        <a class="nav-item" href="#rutinas"><span class="ico">☰</span> Rutinas</a>
         <a class="nav-item" href="#alumnos"><span class="ico">☺</span> Alumnos</a>
         <a class="nav-item" href="#clases"><span class="ico">▥</span> Calendario</a>
         <a class="nav-item" href="#reportes"><span class="ico">▣</span> Reportes</a>
@@ -154,6 +157,18 @@
           <a class="more-link" href="#actividades">VER TODAS LAS ACTIVIDADES →</a>
         </section>
 
+        <section class="panel" id="rutinas">
+          <div class="panel-head">
+            <h2>RUTINAS</h2>
+            <button type="button" class="btn-main" id="newRoutineBtn">+ NUEVA RUTINA</button>
+          </div>
+          <p class="panel-lead">Creá, editá y asigná rutinas a tus alumnos. Cada alumno puede tener una rutina activa.</p>
+          <p class="routines-error" id="routinesError" hidden></p>
+          <div class="routines-list" id="routinesList">
+            <p class="empty-state">Cargando rutinas...</p>
+          </div>
+        </section>
+
         <section class="panel" id="clases">
           <div class="panel-head">
             <h2>CLASES DE HOY</h2>
@@ -260,6 +275,10 @@
               <summary>¿Puedo buscar un alumno?</summary>
               <p>Usá el buscador de Alumnos recientes. Filtra por nombre o actividad.</p>
             </details>
+            <details>
+              <summary>¿Cómo asigno una rutina?</summary>
+              <p>En Rutinas creá o editá la rutina y tocá “Asignar rutina”. Elegí alumnos en la grilla y confirmá.</p>
+            </details>
           </div>
         </section>
 
@@ -311,12 +330,52 @@
     </div>
   </div>
 
-  <script src="/dist/js/site.js?v=4"></script>
+  <div class="sheet" id="routineSheet" hidden>
+    <form class="sheet-card sheet-card-wide" id="routineForm">
+      <h3 id="routineSheetTitle">Nueva rutina</h3>
+      <label>Título<input type="text" id="routineTitle" required maxlength="120" placeholder="Ej: Fuerza full body"></label>
+      <label>Descripción<textarea id="routineDescription" rows="2" maxlength="500" placeholder="Objetivo de la rutina"></textarea></label>
+      <label>Video de YouTube<input type="url" id="routineVideo" maxlength="500" placeholder="https://www.youtube.com/watch?v=..."></label>
+      <label>Imagen (URL)<input type="text" id="routineImage" maxlength="255" placeholder="/imagenes/Rectangle%203.png"></label>
+      <div class="exercise-editor">
+        <div class="exercise-editor-head">
+          <strong>Ejercicios</strong>
+          <button type="button" class="btn-sm" id="addExerciseBtn">+ EJERCICIO</button>
+        </div>
+        <div id="exerciseRows"></div>
+      </div>
+      <p class="routines-error" id="routineFormError" hidden></p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-sm" id="routineCancel">CANCELAR</button>
+        <button type="submit" class="btn-main" id="routineSave">GUARDAR</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="sheet" id="assignSheet" hidden>
+    <div class="sheet-card sheet-card-wide">
+      <h3 id="assignSheetTitle">Asignar rutina</h3>
+      <p class="panel-lead" id="assignSheetLead">Elegí a qué alumnos asignar esta rutina.</p>
+      <label class="search assign-search">
+        <span>⌕</span>
+        <input type="search" id="assignSearch" placeholder="Buscar alumno..." autocomplete="off">
+      </label>
+      <div class="assign-grid" id="assignGrid"></div>
+      <p class="routines-error" id="assignError" hidden></p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-sm" id="assignCancel">CANCELAR</button>
+        <button type="button" class="btn-main" id="assignConfirm">ASIGNAR RUTINA</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/dist/js/site.js?v=6"></script>
   <script src="/dist/js/shell.js?v=5"></script>
-  <script src="/dist/js/api.js?v=4"></script>
+  <script src="/dist/js/api.js?v=5"></script>
   <script src="/dist/js/auth.js?v=4"></script>
   <script src="/dist/js/chat.js?v=4"></script>
-  <script src="/dist/js/settings.js?v=5"></script>
-  <script src="/dist/js/entrenador/dashboard.js?v=7"></script>
+  <script src="/dist/js/settings.js?v=6"></script>
+  <script src="/dist/js/entrenador/dashboard.js?v=8"></script>
+  <script src="/dist/js/entrenador/rutinas.js?v=1"></script>
 </body>
 </html>

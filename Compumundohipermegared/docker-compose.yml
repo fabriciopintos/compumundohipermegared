@@ -3,7 +3,7 @@ services:
     build: .
     container_name: fitpower_app
     ports:
-      - "8080:80"
+      - "${APP_HOST_PORT:-8080}:80"
     volumes:
       - ./:/var/www/html
     entrypoint: ["/bin/bash", "/var/www/html/docker/php/entrypoint.sh"]
@@ -41,6 +41,23 @@ services:
       timeout: 5s
       retries: 20
       start_period: 25s
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: fitpower_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_HOST_PORT:-8081}:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 64M
+      PMA_ABSOLUTE_URI: http://localhost:${PMA_HOST_PORT:-8081}/
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   fitpower_mysqldata:

@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   const logoutBtn = document.getElementById('logout-btn');
   const navBurger = document.getElementById('navBurger');
   const navLinks = document.getElementById('navLinks');
-  const nombreUsuario = document.getElementById('nombreUsuario');
 
   if (navBurger && navLinks) {
     function setNavOpen(open) {
@@ -65,8 +64,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   let activeRoutine = 'fuerza';
   let activeRoutineDay = 'LUN';
 
+  let assignedRoutine = null;
+
   function routinesCatalog() {
-    return [
+    const catalog = [
       {
         id: 'fuerza',
         label: t('dash.routine1'),
@@ -164,6 +165,19 @@ document.addEventListener('DOMContentLoaded', async function () {
         ],
       },
     ];
+
+    if (assignedRoutine) {
+      catalog.unshift({
+        id: 'assigned-' + assignedRoutine.id,
+        label: assignedRoutine.title,
+        title: assignedRoutine.title,
+        desc: assignedRoutine.description || 'Rutina asignada por tu entrenador',
+        image: assignedRoutine.imageUrl || '/imagenes/Rectangle%203.png',
+        videoUrl: assignedRoutine.videoUrl || '',
+        exercises: assignedRoutine.exercises || [],
+      });
+    }
+    return catalog;
   }
 
   function currentRoutine() {
@@ -265,19 +279,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const data = payload.data || {};
     const user = data.user || {};
     setRole(user.role || 'usuario');
-    if (nombreUsuario) {
-      nombreUsuario.textContent = '“' + (user.name || 'USUARIO') + '”';
-    }
     if (typeof mountFitpowerSettings === 'function') {
-      mountFitpowerSettings({
-        role: 'usuario',
-        user: user,
-        onProfileSave: function (profile) {
-          if (nombreUsuario) {
-            nombreUsuario.textContent = '“' + (profile.name || 'USUARIO') + '”';
-          }
-        },
-      });
+      mountFitpowerSettings({ role: 'usuario', user: user });
     }
   }
 
@@ -287,6 +290,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (typeof mountFitpowerSettings === 'function') {
       mountFitpowerSettings({ role: 'usuario', user: {} });
     }
+  }
+
+  try {
+    const routinesPayload = await API.request('/routines');
+    if (routinesPayload.status === 'success' && routinesPayload.data && routinesPayload.data.assigned) {
+      assignedRoutine = routinesPayload.data.assigned;
+      activeRoutine = 'assigned-' + assignedRoutine.id;
+    }
+  } catch (err) {
+    // catálogo local
   }
 
   renderRutinas();

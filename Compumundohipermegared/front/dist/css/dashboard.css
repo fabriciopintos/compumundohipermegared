@@ -47,10 +47,12 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: var(--morado-2);
+  background: linear-gradient(90deg, #7c3aed, var(--morado-2) 45%, var(--morado));
   min-height: 78px;
   display: flex;
   align-items: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
 }
 
 .nav-shell {
@@ -254,6 +256,177 @@ body::before {
   padding: 28px 0 18px;
 }
 
+.nav-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--morado-2, #8B45F5);
+  color: #fff;
+  font-family: "Anton SC", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+.nav-badge[hidden] { display: none !important; }
+
+body.notif-modal-open { overflow: hidden; }
+
+.notif-modal[hidden] { display: none !important; }
+.notif-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+.notif-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.notif-modal.is-open .notif-modal-backdrop { opacity: 1; }
+.notif-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(640px, 100%);
+  max-height: min(86vh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: #120f18;
+  border: 1px solid rgba(139, 69, 245, 0.4);
+  border-radius: 18px;
+  padding: 18px 18px 14px;
+  transform: translateY(12px) scale(0.98);
+  opacity: 0;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+.notif-modal.is-open .notif-modal-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+.notif-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.notif-modal-head h2 {
+  margin: 0;
+  font-family: "Anton SC", sans-serif;
+  letter-spacing: 1px;
+  font-size: 1.55rem;
+}
+.notif-modal-head p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: "Antic Didone", serif;
+  font-size: 0.92rem;
+}
+.notif-modal-close {
+  border: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.notif-modal-close:hover { background: rgba(139, 69, 245, 0.35); }
+.notif-modal-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  min-height: 36px;
+}
+.btn-notif-read {
+  font-size: 0.72rem;
+  padding: 8px 14px;
+}
+.btn-notif-read[hidden] { display: none !important; }
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  padding-right: 2px;
+  min-height: 120px;
+}
+.notif-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px 14px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+.notif-item.is-unread {
+  border-color: rgba(139, 69, 245, 0.45);
+  background: rgba(109, 40, 217, 0.16);
+}
+.notif-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+.notif-item.is-unread .notif-dot {
+  background: var(--morado-2, #8B45F5);
+  box-shadow: 0 0 0 4px rgba(139, 69, 245, 0.2);
+}
+.notif-body strong {
+  display: block;
+  font-family: "Anton SC", sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.notif-body p {
+  margin: 0 0 6px;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Antic Didone", serif;
+  line-height: 1.35;
+}
+.notif-meta {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+}
+.notif-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+.notif-actions .btn-morado {
+  font-size: 0.72rem;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .notif-item {
+    grid-template-columns: auto 1fr;
+  }
+  .notif-actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -299,6 +472,198 @@ body::before {
 .info-card .btn-morado {
   margin-top: auto;
   align-self: flex-start;
+}
+
+.planes-page {
+  padding-top: 36px;
+  padding-bottom: 48px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.planes-page .section-title {
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+}
+.plans-grid {
+  gap: 22px;
+  align-items: stretch;
+}
+.plan-card {
+  min-height: 420px;
+  padding: 32px 28px 28px;
+  gap: 16px;
+  border-radius: 20px;
+}
+.plan-card h3 {
+  font-size: 1.75rem;
+  letter-spacing: 1.5px;
+}
+.plan-card .plan-price {
+  font-size: 2.35rem;
+  margin: 4px 0 8px;
+}
+.plan-card p:not(.plan-price) {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 28ch;
+}
+.plan-card .btn-morado {
+  margin-top: auto;
+  min-height: 48px;
+  padding: 12px 22px;
+  font-size: 0.9rem;
+  align-self: stretch;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .plan-card { min-height: 340px; }
+}
+@media (max-width: 640px) {
+  .plan-card {
+    min-height: 280px;
+    padding: 26px 22px;
+  }
+  .plan-card .plan-price { font-size: 2rem; }
+}
+
+.checkout-page {
+  padding: 28px 0 48px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.checkout-back {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: "Antic Didone", serif;
+}
+.checkout-back:hover { color: var(--morado-2); }
+.checkout-demo {
+  text-align: center;
+  margin: -12px 0 22px;
+  color: rgba(255, 200, 120, 0.9);
+  font-size: 0.92rem;
+}
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.checkout-summary {
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(139, 69, 245, 0.35);
+  background: rgba(20, 18, 24, 0.92);
+}
+.checkout-summary h2 {
+  margin: 0 0 10px;
+  font-family: "Anton SC", sans-serif;
+  letter-spacing: 1px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.checkout-plan-name {
+  margin: 0;
+  font-family: "Anton SC", sans-serif;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+.checkout-plan-price {
+  margin: 8px 0 12px;
+  font-family: "Anton SC", sans-serif;
+  color: var(--morado-2);
+  font-size: 2rem;
+}
+.checkout-plan-desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.45;
+}
+.checkout-form {
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 18, 24, 0.88);
+}
+.checkout-form fieldset {
+  border: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.checkout-form legend {
+  margin-bottom: 8px;
+  font-family: "Anton SC", sans-serif;
+  letter-spacing: 1px;
+  font-size: 1.05rem;
+}
+.checkout-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.92rem;
+}
+.checkout-form input {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #0b0b10;
+  color: #fff;
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: inherit;
+}
+.checkout-form input:focus {
+  outline: 2px solid rgba(139, 69, 245, 0.55);
+  outline-offset: 1px;
+}
+.checkout-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 12px;
+}
+.checkout-error {
+  color: #fecaca;
+  margin: 0 0 10px;
+}
+.checkout-error[hidden],
+.checkout-success[hidden] { display: none !important; }
+.checkout-submit {
+  width: 100%;
+  min-height: 48px;
+  text-align: center;
+  border: 0;
+  cursor: pointer;
+}
+.checkout-submit:disabled { opacity: 0.7; cursor: wait; }
+.checkout-success {
+  margin-top: 12px;
+  padding: 28px 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(139, 69, 245, 0.4);
+  background: rgba(109, 40, 217, 0.16);
+  text-align: center;
+}
+.checkout-success h2 {
+  margin: 0 0 10px;
+  font-family: "Anton SC", sans-serif;
+  letter-spacing: 1px;
+}
+.checkout-success p {
+  margin: 0 auto 18px;
+  max-width: 42ch;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.45;
+}
+.checkout-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+@media (max-width: 820px) {
+  .checkout-layout { grid-template-columns: 1fr; }
 }
 
 /* Cards: imagen + botón debajo, como en el diseño */

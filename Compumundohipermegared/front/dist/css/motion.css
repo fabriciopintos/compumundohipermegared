@@ -1,0 +1,267 @@
+/* FitPower shared motion — page transitions, reveals, micro-interactions */
+
+:root {
+  --fp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fp-dur: 0.45s;
+  --fp-dur-fast: 0.22s;
+}
+
+html.fp-page-enter .layout,
+html.fp-page-enter .navbar-fitpower,
+html.fp-page-enter main,
+html.fp-page-enter .landing-header,
+html.fp-page-enter .landing-main,
+html.fp-page-enter .login-top,
+html.fp-page-enter .login-main,
+html.fp-page-enter .site-footer {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+html.fp-page-ready .layout,
+html.fp-page-ready .navbar-fitpower,
+html.fp-page-ready main,
+html.fp-page-ready .landing-header,
+html.fp-page-ready .landing-main,
+html.fp-page-ready .login-top,
+html.fp-page-ready .login-main,
+html.fp-page-ready .site-footer {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--fp-dur) var(--fp-ease-out),
+    transform var(--fp-dur) var(--fp-ease-out);
+}
+
+html.fp-page-leave .layout,
+html.fp-page-leave .navbar-fitpower,
+html.fp-page-leave main,
+html.fp-page-leave .landing-header,
+html.fp-page-leave .landing-main,
+html.fp-page-leave .login-top,
+html.fp-page-leave .login-main,
+html.fp-page-leave .site-footer {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity var(--fp-dur-fast) ease,
+    transform var(--fp-dur-fast) ease;
+  pointer-events: none;
+}
+
+.fp-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.55s var(--fp-ease-out),
+    transform 0.55s var(--fp-ease-out);
+  will-change: opacity, transform;
+}
+
+.fp-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.fp-reveal-delay-1 { transition-delay: 0.06s; }
+.fp-reveal-delay-2 { transition-delay: 0.12s; }
+.fp-reveal-delay-3 { transition-delay: 0.18s; }
+.fp-reveal-delay-4 { transition-delay: 0.24s; }
+.fp-reveal-delay-5 { transition-delay: 0.3s; }
+
+a.btn-morado,
+button.btn-morado,
+.btn-main,
+.btn-login,
+.btn-sm,
+.checkout-submit,
+.settings-btn {
+  transition:
+    transform var(--fp-dur-fast) var(--fp-ease),
+    background-color var(--fp-dur-fast) ease,
+    box-shadow var(--fp-dur-fast) ease,
+    filter var(--fp-dur-fast) ease;
+}
+
+a.btn-morado:hover,
+button.btn-morado:hover,
+.btn-main:hover,
+.btn-login:hover,
+.btn-sm:hover,
+.checkout-submit:hover,
+.settings-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+a.btn-morado:active,
+button.btn-morado:active,
+.btn-main:active,
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.nav-links a,
+.nav-item,
+.brand-title,
+.landing-logo,
+.lang-toggle,
+.lang-toggle-landing {
+  transition:
+    color var(--fp-dur-fast) ease,
+    background-color var(--fp-dur-fast) ease,
+    transform var(--fp-dur-fast) var(--fp-ease);
+}
+
+.nav-links a:hover,
+.nav-item:hover {
+  transform: translateX(2px);
+}
+
+.brand-title:hover,
+.landing-logo:hover {
+  transform: scale(1.02);
+}
+
+.info-card,
+.plan-card,
+.stat-card,
+.actividad-item .card-actividad,
+.routine-row,
+.activity-row,
+.today-card,
+.notif-item,
+.assign-card,
+.faq-item,
+.staff-card {
+  transition:
+    transform 0.28s var(--fp-ease),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease,
+    background-color 0.28s ease;
+}
+
+.info-card:hover,
+.plan-card:hover,
+.stat-card:hover,
+.routine-row:hover,
+.activity-row:hover,
+.today-card:hover,
+.assign-card:hover,
+.staff-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.navbar-fitpower,
+.landing-nav-bar,
+.sidebar,
+.topbar {
+  transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.site-footer {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s var(--fp-ease-out) 0.05s,
+    transform 0.6s var(--fp-ease-out) 0.05s;
+}
+
+.site-footer.fp-reveal.is-in,
+html.fp-page-ready .site-footer {
+  opacity: 1;
+  transform: none;
+}
+
+.notif-modal-card,
+.settings-drawer,
+.sheet-card {
+  transition:
+    transform 0.28s var(--fp-ease),
+    opacity 0.28s ease;
+}
+
+.rutina-tab,
+.rutina-day,
+.dia,
+.chip {
+  transition:
+    transform var(--fp-dur-fast) var(--fp-ease),
+    background-color var(--fp-dur-fast) ease,
+    color var(--fp-dur-fast) ease,
+    border-color var(--fp-dur-fast) ease;
+}
+
+.rutina-tab:hover,
+.rutina-day:hover,
+.dia:hover,
+.chip:hover {
+  transform: translateY(-1px);
+}
+
+.rutinas-panel,
+.rutina-hero,
+.rutina-exercises {
+  animation: fp-soft-in 0.45s var(--fp-ease-out) both;
+}
+
+@keyframes fp-soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fp-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 69, 245, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(139, 69, 245, 0); }
+}
+
+.btn-login,
+.plan-card.is-featured .btn-morado {
+  animation: fp-pulse-glow 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.fp-page-enter .layout,
+  html.fp-page-enter .navbar-fitpower,
+  html.fp-page-enter main,
+  html.fp-page-enter .landing-header,
+  html.fp-page-enter .landing-main,
+  html.fp-page-enter .login-top,
+  html.fp-page-enter .login-main,
+  html.fp-page-enter .site-footer,
+  html.fp-page-ready .layout,
+  html.fp-page-ready .navbar-fitpower,
+  html.fp-page-ready main,
+  html.fp-page-ready .landing-header,
+  html.fp-page-ready .landing-main,
+  html.fp-page-ready .login-top,
+  html.fp-page-ready .login-main,
+  html.fp-page-ready .site-footer,
+  html.fp-page-leave .layout,
+  html.fp-page-leave .navbar-fitpower,
+  html.fp-page-leave main,
+  html.fp-page-leave .landing-header,
+  html.fp-page-leave .landing-main,
+  html.fp-page-leave .login-top,
+  html.fp-page-leave .login-main,
+  html.fp-page-leave .site-footer,
+  .fp-reveal,
+  .rutinas-panel,
+  .rutina-hero,
+  .rutina-exercises,
+  .btn-login,
+  .plan-card.is-featured .btn-morado {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

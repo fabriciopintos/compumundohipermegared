@@ -104,6 +104,9 @@ Con Docker en marcha, abrí:
 - Dashboard entrenador: http://localhost:8080/dashboard-entrenador
 - Dashboard administrador: http://localhost:8080/dashboard-admin
 - API: http://localhost:8080/api
+- phpMyAdmin (base completa): http://localhost:8081/
+
+En phpMyAdmin vas a ver la base `fitpower` con todas las tablas (usuarios, clases, mensajes, migraciones, etc.). Usuario: `root` / la misma `DB_PASSWORD` del `.env`.
 
 ## Login
 

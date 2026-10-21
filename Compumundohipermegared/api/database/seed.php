@@ -27,9 +27,7 @@ $upsertUser = $db->prepare(
     'INSERT INTO users (name, email, password_hash, role)
      VALUES (:name, :email, :password_hash, :role)
      ON DUPLICATE KEY UPDATE
-       name = VALUES(name),
        role = VALUES(role),
-       password_hash = VALUES(password_hash),
        updated_at = CURRENT_TIMESTAMP'
 );
 
@@ -137,7 +135,96 @@ if ($usuarioId && $firstSessionId) {
     ]);
 }
 
+$demoStudents = [
+    ['María López', 'maria.lopez@fitpower.com'],
+    ['Juan Pérez', 'juan.perez@fitpower.com'],
+    ['Lucía Díaz', 'lucia.diaz@fitpower.com'],
+    ['Carlos Ruiz', 'carlos.ruiz@fitpower.com'],
+];
+foreach ($demoStudents as $student) {
+    $upsertUser->execute([
+        ':name' => $student[0],
+        ':email' => $student[1],
+        ':password_hash' => $hash,
+        ':role' => 'usuario',
+    ]);
+}
+
+$entrenadorId = $userIds['entrenador'] ?? null;
+$routineCount = 0;
+try {
+    $routineCount = (int) $db->query('SELECT COUNT(*) FROM routines')->fetchColumn();
+} catch (Exception $e) {
+    $routineCount = -1;
+}
+
+if ($routineCount === 0 && $entrenadorId) {
+    $seedRoutines = [
+        [
+            'Fuerza',
+            'Sesión de fuerza con patrones básicos y descanso controlado.',
+            'https://www.youtube.com/watch?v=HE45jVN7XKM',
+            '/imagenes/Rectangle%203.png',
+            [
+                ['name' => 'Sentadilla', 'detail' => '4 x 10', 'rest' => '90s'],
+                ['name' => 'Press banca', 'detail' => '4 x 8', 'rest' => '90s'],
+                ['name' => 'Remo con barra', 'detail' => '4 x 10', 'rest' => '75s'],
+                ['name' => 'Press militar', 'detail' => '3 x 10', 'rest' => '75s'],
+            ],
+        ],
+        [
+            'Hipertrofia',
+            'Volumen controlado para ganar músculo con descanso justo.',
+            'https://www.youtube.com/watch?v=nxisr1AalNc',
+            '/imagenes/Rectangle%206.png',
+            [
+                ['name' => 'Zancadas', 'detail' => '3 x 12', 'rest' => '60s'],
+                ['name' => 'Aperturas', 'detail' => '3 x 12', 'rest' => '60s'],
+                ['name' => 'Jalón al pecho', 'detail' => '4 x 10', 'rest' => '75s'],
+            ],
+        ],
+        [
+            'Cardio',
+            'Trabajo cardiovascular con intervalos y movilidad.',
+            'https://www.youtube.com/watch?v=xSUXMwqZ3z0',
+            '/imagenes/Rectangle%208.png',
+            [
+                ['name' => 'Calentamiento', 'detail' => '8 min', 'rest' => '-'],
+                ['name' => 'Bolsa / sombra', 'detail' => "6 x 2'", 'rest' => '60s'],
+                ['name' => 'Burpees', 'detail' => '4 x 10', 'rest' => '50s'],
+            ],
+        ],
+        [
+            'Movilidad',
+            'Movilidad articular y respiración para recuperar rango.',
+            'https://www.youtube.com/watch?v=2IcWJobNDck',
+            '/imagenes/Rectangle%207.png',
+            [
+                ['name' => 'Respiración', 'detail' => '3 min', 'rest' => '-'],
+                ['name' => 'Gato-vaca', 'detail' => '2 x 12', 'rest' => '30s'],
+                ['name' => 'Apertura de cadera', 'detail' => '2 x 10', 'rest' => '30s'],
+            ],
+        ],
+    ];
+
+    $insertRoutine = $db->prepare(
+        'INSERT INTO routines (title, description, video_url, image_url, exercises_json, created_by)
+         VALUES (:title, :description, :video_url, :image_url, :exercises_json, :created_by)'
+    );
+    foreach ($seedRoutines as $routine) {
+        $insertRoutine->execute([
+            ':title' => $routine[0],
+            ':description' => $routine[1],
+            ':video_url' => $routine[2],
+            ':image_url' => $routine[3],
+            ':exercises_json' => json_encode($routine[4], JSON_UNESCAPED_UNICODE),
+            ':created_by' => $entrenadorId,
+        ]);
+    }
+}
+
 fwrite(STDOUT, "Cuentas de desarrollo (password: cambiar-en-desarrollo):\n");
 fwrite(STDOUT, "  admin@fitpower.com       → admin\n");
 fwrite(STDOUT, "  entrenador@fitpower.com  → entrenador\n");
 fwrite(STDOUT, "  usuario@fitpower.com     → usuario\n");
+fwrite(STDOUT, "  (+ alumnos demo maria/juan/lucia/carlos @fitpower.com)\n");

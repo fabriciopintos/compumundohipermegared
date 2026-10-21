@@ -6,6 +6,8 @@ DirectoryIndex index.html
 RewriteRule ^login/?$ dist/pages/login.html [L]
 RewriteRule ^dashboard/?$ dist/pages/DashboardUsu.html [L]
 RewriteRule ^rutinas/?$ dist/pages/Rutinas.html [L]
+RewriteRule ^planes/?$ dist/pages/Planes.html [L]
+RewriteRule ^compra/?$ dist/pages/Compra.html [L]
 RewriteRule ^dashboard-entrenador/?$ dist/pages/DashboardEntrenador.html [L]
 RewriteRule ^dashboard-admin/?$ dist/pages/DashboardAdmin.html [L]
 

@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   const usuario = document.getElementById('usuario');
   const password = document.getElementById('password');
   const togglePassword = document.getElementById('toggle-password');
-  const eyeOpen = togglePassword.querySelector('.icon-eye');
-  const eyeOff = togglePassword.querySelector('.icon-eye-off');
+  const eyeOpen = togglePassword ? togglePassword.querySelector('.icon-eye') : null;
+  const eyeOff = togglePassword ? togglePassword.querySelector('.icon-eye-off') : null;
   const capsWarning = document.getElementById('caps-warning');
 
   function updateCaps(event) {
@@ -19,30 +19,40 @@ document.addEventListener('DOMContentLoaded', async function () {
     capsWarning.hidden = !on;
   }
 
-  password.addEventListener('keydown', updateCaps);
-  password.addEventListener('keyup', updateCaps);
-  password.addEventListener('focus', updateCaps);
-  password.addEventListener('blur', function () {
-    if (capsWarning) capsWarning.hidden = true;
-  });
+  if (password) {
+    password.addEventListener('keydown', updateCaps);
+    password.addEventListener('keyup', updateCaps);
+    password.addEventListener('focus', updateCaps);
+    password.addEventListener('blur', function () {
+      if (capsWarning) capsWarning.hidden = true;
+    });
+  }
 
   function showError(message) {
+    if (!errorBox) return;
     errorBox.hidden = false;
     errorBox.textContent = message;
   }
 
   function hideError() {
+    if (!errorBox) return;
     errorBox.hidden = true;
     errorBox.textContent = '';
   }
 
-  togglePassword.addEventListener('click', function () {
-    const showing = password.type === 'text';
-    password.type = showing ? 'password' : 'text';
-    eyeOpen.classList.toggle('d-none', !showing);
-    eyeOff.classList.toggle('d-none', showing);
-    togglePassword.setAttribute('aria-label', showing ? t('login.showPassword') : t('login.hidePassword'));
-  });
+  if (togglePassword && password) {
+    togglePassword.addEventListener('click', function () {
+      const showing = password.type === 'text';
+      password.type = showing ? 'password' : 'text';
+      if (eyeOpen) eyeOpen.classList.toggle('d-none', !showing);
+      if (eyeOff) eyeOff.classList.toggle('d-none', showing);
+      togglePassword.setAttribute('aria-label', showing ? t('login.showPassword') : t('login.hidePassword'));
+    });
+  }
+
+  if (!form || !usuario || !password || !submitBtn) {
+    return;
+  }
 
   form.addEventListener('submit', async function (event) {
     event.preventDefault();

@@ -76,6 +76,62 @@ class AuthController {
         ]);
     }
 
+    public function updateProfile() {
+        $userId = RequestAuth::userId();
+        $data = $this->readJson();
+
+        $name = trim((string) ($data['name'] ?? ''));
+        $first = trim((string) ($data['firstName'] ?? $data['first_name'] ?? ''));
+        $last = trim((string) ($data['lastName'] ?? $data['last_name'] ?? ''));
+        if ($name === '' && ($first !== '' || $last !== '')) {
+            $name = trim($first . ' ' . $last);
+        }
+        $email = trim((string) ($data['email'] ?? ''));
+
+        if ($name === '' || $email === '') {
+            JsonResponse::error('Completá nombre y correo.', 422);
+        }
+        if (mb_strlen($name) > 120) {
+            JsonResponse::error('El nombre es demasiado largo.', 422);
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            JsonResponse::error('El correo no es válido.', 422);
+        }
+        if ($this->model->emailTakenByOther($email, $userId)) {
+            JsonResponse::error('Ese correo ya está en uso.', 409);
+        }
+
+        $this->model->updateProfile($userId, $name, $email);
+        $user = $this->model->findById($userId);
+        if (!$user) {
+            JsonResponse::error('No se pudo actualizar el perfil.', 500);
+        }
+
+        JsonResponse::ok(['user' => $this->publicUser($user)], 'Perfil actualizado');
+    }
+
+    public function changePassword() {
+        $userId = RequestAuth::userId();
+        $data = $this->readJson();
+        $current = (string) ($data['currentPassword'] ?? $data['current_password'] ?? '');
+        $next = (string) ($data['newPassword'] ?? $data['new_password'] ?? $data['password'] ?? '');
+
+        if ($current === '' || $next === '') {
+            JsonResponse::error('Completá la contraseña actual y la nueva.', 422);
+        }
+        if (strlen($next) < 8) {
+            JsonResponse::error('La nueva contraseña debe tener al menos 8 caracteres.', 422);
+        }
+
+        $user = $this->model->findAuthById($userId);
+        if (!$user || !password_verify($current, $user['password_hash'])) {
+            JsonResponse::error('La contraseña actual no es correcta.', 401);
+        }
+
+        $this->model->updatePassword($userId, password_hash($next, PASSWORD_DEFAULT));
+        JsonResponse::ok([], 'Contraseña actualizada');
+    }
+
     private function publicUser(array $user): array {
         return [
             'id' => (int) $user['id'],

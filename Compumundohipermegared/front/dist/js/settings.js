@@ -351,30 +351,71 @@
     }
 
     if (profileForm) {
-      profileForm.addEventListener('submit', function (event) {
+      profileForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         var firstVal = root.querySelector('#settings-first').value.trim();
         var lastVal = root.querySelector('#settings-last').value.trim();
         var emailVal = root.querySelector('#settings-email').value.trim();
+        var phoneVal = root.querySelector('#settings-phone').value.trim();
         if (!firstVal || !emailVal) {
           showMsg(profileMsg, 'Completá nombre y correo.', true);
           return;
         }
         var full = (firstVal + ' ' + lastVal).trim();
-        prefs.name = full;
-        persistToggles();
-        if (typeof options.onProfileSave === 'function') {
-          options.onProfileSave({ name: full, firstName: firstVal, lastName: lastVal, email: emailVal, phone: root.querySelector('#settings-phone').value.trim() });
+        var submitBtn = profileForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Guardando...';
         }
-        if (avatarEl && !prefs.avatarDataUrl) {
-          avatarEl.textContent = initial(firstVal);
+        try {
+          if (typeof API === 'undefined' || typeof API.request !== 'function') {
+            throw new Error('API no disponible');
+          }
+          var payload = await API.request('/me', 'PUT', {
+            name: full,
+            firstName: firstVal,
+            lastName: lastVal,
+            email: emailVal,
+          });
+          if (payload.status !== 'success') {
+            showMsg(profileMsg, payload.message || 'No se pudieron guardar los cambios.', true);
+            return;
+          }
+          var saved = (payload.data && payload.data.user) || {};
+          var savedName = saved.name || full;
+          var savedEmail = saved.email || emailVal;
+          prefs.name = savedName;
+          prefs.firstName = firstVal;
+          prefs.lastName = lastVal;
+          prefs.email = savedEmail;
+          prefs.phone = phoneVal;
+          persistToggles();
+          if (typeof options.onProfileSave === 'function') {
+            options.onProfileSave({
+              name: savedName,
+              firstName: firstVal,
+              lastName: lastVal,
+              email: savedEmail,
+              phone: phoneVal,
+            });
+          }
+          if (avatarEl && !prefs.avatarDataUrl) {
+            avatarEl.textContent = initial(firstVal);
+          }
+          showMsg(profileMsg, 'Cambios guardados.', false);
+        } catch (err) {
+          showMsg(profileMsg, 'No se pudieron guardar los cambios.', true);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Guardar cambios';
+          }
         }
-        showMsg(profileMsg, 'Cambios guardados.', false);
       });
     }
 
     if (passwordForm) {
-      passwordForm.addEventListener('submit', function (event) {
+      passwordForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         var current = root.querySelector('#settings-pass-current').value;
         var next = root.querySelector('#settings-pass-new').value;
@@ -391,8 +432,33 @@
           showMsg(passwordMsg, 'La confirmación no coincide.', true);
           return;
         }
-        passwordForm.reset();
-        showMsg(passwordMsg, 'Contraseña validada. Pedile al administrador que la actualice en el sistema si necesitás el cambio definitivo.', false);
+        var submitBtn = passwordForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Guardando...';
+        }
+        try {
+          if (typeof API === 'undefined' || typeof API.request !== 'function') {
+            throw new Error('API no disponible');
+          }
+          var payload = await API.request('/me/password', 'POST', {
+            currentPassword: current,
+            newPassword: next,
+          });
+          if (payload.status !== 'success') {
+            showMsg(passwordMsg, payload.message || 'No se pudo cambiar la contraseña.', true);
+            return;
+          }
+          passwordForm.reset();
+          showMsg(passwordMsg, 'Contraseña actualizada.', false);
+        } catch (err) {
+          showMsg(passwordMsg, 'No se pudo cambiar la contraseña.', true);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Cambiar contraseña';
+          }
+        }
       });
     }
 
