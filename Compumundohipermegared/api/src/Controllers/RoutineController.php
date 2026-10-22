@@ -179,7 +179,7 @@ class RoutineController {
         $videoUrl = trim((string) ($data['videoUrl'] ?? $data['video_url'] ?? ''));
         $imageUrl = trim((string) ($data['imageUrl'] ?? $data['image_url'] ?? ''));
         if ($imageUrl === '') {
-            $imageUrl = '/imagenes/Rectangle%203.png';
+            $imageUrl = '/assets/img/activities/hero.png';
         }
 
         $rawExercises = $data['exercises'] ?? [];
@@ -196,10 +196,12 @@ class RoutineController {
             if ($name === '') {
                 continue;
             }
+            $exVideo = trim((string) ($item['videoUrl'] ?? $item['video_url'] ?? ''));
             $exercises[] = [
                 'name' => mb_substr($name, 0, 120),
                 'detail' => mb_substr(trim((string) ($item['detail'] ?? '')), 0, 80),
                 'rest' => mb_substr(trim((string) ($item['rest'] ?? '')), 0, 40),
+                'videoUrl' => $exVideo !== '' ? mb_substr($exVideo, 0, 500) : '',
             ];
         }
         if (!count($exercises)) {

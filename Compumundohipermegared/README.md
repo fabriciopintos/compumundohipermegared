@@ -134,6 +134,27 @@ JWT + password_hash
 MySQL 8 (Docker, volumen persistente)
 ```
 
-Modelo entidad-relación: ver [`docs/MER.md`](docs/MER.md).
+### Carpetas del repo
+
+```text
+Compumundohipermegared/
+├── api/                 # Backend PHP (routes, controllers, models, DB)
+│   ├── database/        # migrations + seed
+│   └── src/
+│       ├── Controllers/
+│       ├── Models/
+│       └── Utils/
+├── front/               # Frontend (ver front/README.md)
+│   ├── pages/           # HTML de cada vista
+│   ├── assets/          # css / js / img organizados
+│   └── design/          # mockups (no runtime)
+├── docker/              # Apache + entrypoint PHP
+├── docs/                # MER y documentación
+├── docker-compose.yml
+└── Dockerfile
+```
+
+Modelo entidad-relación: ver [`docs/MER.md`](docs/MER.md).  
+Detalle del front: ver [`front/README.md`](front/README.md).
 
 No se agregaron dependencias de Composer. JWT se firma con HMAC-SHA256 nativo de PHP.

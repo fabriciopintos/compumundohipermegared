@@ -21,6 +21,12 @@ class Jwt {
         }
 
         [$header, $body, $signature] = $parts;
+
+        $headerData = json_decode(self::b64decode($header), true);
+        if (!is_array($headerData) || ($headerData['alg'] ?? '') !== 'HS256') {
+            throw new \Exception('Token inválido');
+        }
+
         $expected = self::b64(hash_hmac('sha256', $header . '.' . $body, $secret, true));
 
         if (!hash_equals($expected, $signature)) {

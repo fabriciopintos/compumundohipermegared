@@ -43,10 +43,24 @@ try {
     exit;
 }
 
+\App\Utils\RequestAuth::setDb($db);
+
 $base = getenv('API_BASE_PATH') ?: '/api';
 $router = new \App\Utils\Router($base, $db);
 
 require_once 'routes.php';
 
 ob_get_clean();
-$router->run();
+try {
+    $router->run();
+} catch (Throwable $e) {
+    error_log('API uncaught: ' . $e->getMessage());
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
+    }
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Ocurrió un error interno. Intentá de nuevo.',
+    ], JSON_UNESCAPED_UNICODE);
+}

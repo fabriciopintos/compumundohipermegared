@@ -19,6 +19,13 @@ class EnvLoader {
             // BOM UTF-8 en la primera clave del archivo
             $name = preg_replace('/^\xEF\xBB\xBF/', '', $name);
             if ($name === '') continue;
+            // Quitar comillas envolventes: JWT_SECRET="abc"
+            if (
+                (str_starts_with($value, '"') && str_ends_with($value, '"'))
+                || (str_starts_with($value, "'") && str_ends_with($value, "'"))
+            ) {
+                $value = substr($value, 1, -1);
+            }
 
             // Si el proceso ya tiene un valor no vacío (Docker, Apache SetEnv, etc.), no pisarlo.
             // Si existe pero está vacío, sí cargar desde .env — sin eso B2_* suele fallar aunque el .env esté bien.

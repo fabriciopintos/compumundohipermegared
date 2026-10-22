@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Login</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/img/brand/favicon.svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Didone&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/shared/loader.css?v=3">
+  <link rel="stylesheet" href="/assets/css/shared/motion.css?v=4">
+  <link rel="stylesheet" href="/assets/css/pages/login.css?v=11">
+  <link rel="stylesheet" href="/assets/css/shared/footer.css?v=4">
+  <link rel="stylesheet" href="/assets/css/shared/mobile.css?v=4">
+  <link rel="stylesheet" href="/assets/css/shared/responsive.css?v=8">
+</head>
+<body class="login-body">
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-orb" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+      <div class="site-loader-bar" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
+  <div class="login-glow" aria-hidden="true"></div>
+  <div class="triangulo" aria-hidden="true"></div>
+
+  <header class="login-top">
+    <button type="button" class="lang-toggle-login" data-lang-toggle data-i18n="lang.label">ES</button>
+  </header>
+
+  <main class="login-main">
+    <div class="login-panel">
+      <p class="login-kicker">EST. 2026</p>
+      <h1 class="inicio" data-i18n="login.title">LOGIN</h1>
+      <p class="login-sub" data-i18n="login.subtitle">Ingresá para continuar tu entrenamiento.</p>
+
+      <form id="login-form" novalidate>
+        <div class="login-field">
+          <label class="login-label" for="usuario" data-i18n="login.user">EMAIL</label>
+          <input type="text" name="usuario" class="form-control input-linea" id="usuario" autocomplete="username" required>
+        </div>
+        <div class="login-field password-wrap">
+          <label class="login-label" for="password" data-i18n="login.password">CONTRASEÑA</label>
+          <input type="password" name="password" class="form-control input-linea" id="password" autocomplete="current-password" required>
+          <button type="button" class="password-toggle" id="toggle-password" aria-label="Mostrar contraseña">
+            <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+            <svg class="icon-eye-off d-none" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M2.1 3.5 3.5 2.1 21.9 20.5 20.5 21.9l-3.1-3.1A12.7 12.7 0 0 1 12 19c-7 0-10-7-10-7a18.6 18.6 0 0 1 5.2-5.5L2.1 3.5zM12 7a5 5 0 0 1 5 5c0 .7-.1 1.3-.4 1.9l-6.5-6.5c.6-.3 1.2-.4 1.9-.4zm-5 5c0-.4.1-.8.2-1.1l6.9 6.9c-.7.1-1.4.2-2.1.2a5 5 0 0 1-5-5zm13.8-2.4A18.7 18.7 0 0 1 22 12s-3 7-10 7c-.7 0-1.3-.1-1.9-.2l1.7-1.7c.1 0 .1 0 .2 0a5 5 0 0 0 5-5c0-.1 0-.1 0-.2l3.8-3.3z"/>
+            </svg>
+          </button>
+        </div>
+        <p id="caps-warning" class="caps-warning" role="status" hidden data-i18n="login.caps">Bloq Mayús activado</p>
+
+        <p id="login-error" class="mt-3 mb-0" role="alert" hidden></p>
+
+        <button type="submit" class="btn btn-login" id="login-submit" data-i18n="login.submit">LOGIN</button>
+      </form>
+
+      <a class="login-back" href="/" data-i18n="login.back">← VOLVER A FITPOWER</a>
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="/assets/js/shared/site.js?v=10"></script>
+  <script src="/assets/js/shared/i18n.js?v=10"></script>
+  <script src="/assets/js/shared/api.js?v=7"></script>
+  <script src="/assets/js/shared/auth.js?v=5"></script>
+  <script src="/assets/js/shared/login.js?v=6"></script>
+</body>
+</html>

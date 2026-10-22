@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Panel de Entrenador</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/img/brand/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/shared/loader.css?v=3">
+  <link rel="stylesheet" href="/assets/css/shared/motion.css?v=4">
+  <link rel="stylesheet" href="/assets/css/pages/dashboard-entrenador.css?v=7">
+  <link rel="stylesheet" href="/assets/css/shared/settings.css?v=9">
+  <link rel="stylesheet" href="/assets/css/shared/chat.css?v=4">
+  <link rel="stylesheet" href="/assets/css/shared/footer.css?v=4">
+  <link rel="stylesheet" href="/assets/css/shared/responsive.css?v=8">
+</head>
+<body>
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-orb" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+      <div class="site-loader-bar" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
+  <script>
+    if (!localStorage.getItem('fitpower_token')) {
+      window.location.replace('/login');
+    }
+  </script>
+
+  <div class="sidebar-backdrop" data-sidebar-backdrop hidden></div>
+  <div class="layout">
+    <aside class="sidebar" data-sidebar>
+      <div class="brand">
+        <a class="brand-title" href="/dashboard-entrenador">FITPOWER</a>
+        <div class="brand-sub">PANEL DE ENTRENADOR</div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item active" href="#inicio"><span class="ico">⌂</span> Inicio</a>
+        <a class="nav-item" href="#actividades"><span class="ico">▦</span> Actividades</a>
+        <a class="nav-item" href="#rutinas"><span class="ico">☰</span> Rutinas</a>
+        <a class="nav-item" href="#alumnos"><span class="ico">☺</span> Alumnos</a>
+        <a class="nav-item" href="#clases"><span class="ico">▥</span> Calendario</a>
+        <a class="nav-item" href="#reportes"><span class="ico">▣</span> Reportes</a>
+        <a class="nav-item" href="#mensajes"><span class="ico">✉</span> Mensajes</a>
+      </nav>
+      <div class="nav-bottom">
+        <a class="nav-item" href="#configuracion" data-open-settings><span class="ico">⚙</span> Configuración</a>
+        <a class="nav-item" href="#ayuda"><span class="ico">?</span> Ayuda</a>
+        <a class="nav-item logout" href="/" id="logout-btn"><span class="ico">⇢</span> Cerrar Sesión</a>
+      </div>
+    </aside>
+
+    <div class="content">
+      <header class="topbar">
+        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Menú">☰</button>
+        <div class="topbar-spacer"></div>
+        <button type="button" class="lang-toggle" data-lang-toggle data-i18n="lang.label">ES</button>
+        <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificaciones">🔔<span class="dot"></span></button>
+        <div class="profile-chip">
+          <div class="avatar">E</div>
+          <div>
+            <div class="profile-role">ENTRENADOR</div>
+            <div class="profile-name" id="nombreEntrenador">ENTRENADOR</div>
+          </div>
+        </div>
+      </header>
+
+      <main id="inicio">
+        <section class="hero">
+          <h1>BIENVENIDO, <span>ENTRENADOR</span></h1>
+          <p>Gestioná tus actividades, alumnos y seguí el progreso de tu equipo.</p>
+        </section>
+
+        <section class="stats" id="reportes">
+          <article class="stat-card">
+            <div class="stat-ico">☺</div>
+            <div class="stat-value">24</div>
+            <div class="stat-label">ALUMNOS</div>
+            <div class="stat-sub">ACTIVOS</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-ico">▦</div>
+            <div class="stat-value">18</div>
+            <div class="stat-label">ACTIVIDADES</div>
+            <div class="stat-sub">ACTIVAS</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-ico">▥</div>
+            <div class="stat-value">6</div>
+            <div class="stat-label">CLASES</div>
+            <div class="stat-sub">HOY</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-ico">★</div>
+            <div class="stat-value">92%</div>
+            <div class="stat-label">ASISTENCIA</div>
+            <div class="stat-sub">PROMEDIO</div>
+          </article>
+        </section>
+
+        <section class="panel" id="actividades">
+          <div class="panel-head">
+            <h2>ACTIVIDADES</h2>
+            <button type="button" class="btn-main" id="newActivityBtn">+ NUEVA ACTIVIDAD</button>
+          </div>
+          <div class="activity-list" id="activityList">
+            <article class="activity-row">
+              <img src="/assets/img/activities/boxeo.png" alt="Boxeo">
+              <div class="activity-main">
+                <strong>BOXEO</strong>
+                <span>Lun / Mie / Vie · 16 alumnos</span>
+              </div>
+              <div class="level">NIVEL INTERMEDIO</div>
+              <div class="row-actions">
+                <button type="button" class="circle purple" title="Editar">✎</button>
+                <button type="button" class="circle gray" title="Eliminar">🗑</button>
+              </div>
+            </article>
+            <article class="activity-row">
+              <img src="/assets/img/activities/pilates.png" alt="Pilates">
+              <div class="activity-main">
+                <strong>PILATES</strong>
+                <span>Mar / Jue · 12 alumnos</span>
+              </div>
+              <div class="level">NIVEL PRINCIPIANTE</div>
+              <div class="row-actions">
+                <button type="button" class="circle purple" title="Editar">✎</button>
+                <button type="button" class="circle gray" title="Eliminar">🗑</button>
+              </div>
+            </article>
+            <article class="activity-row">
+              <img src="/assets/img/activities/hidrogimnasia.png" alt="Hidrogimnasia">
+              <div class="activity-main">
+                <strong>HIDROGIMNASIA</strong>
+                <span>Lun / Vie · 10 alumnos</span>
+              </div>
+              <div class="level">NIVEL INTERMEDIO</div>
+              <div class="row-actions">
+                <button type="button" class="circle purple" title="Editar">✎</button>
+                <button type="button" class="circle gray" title="Eliminar">🗑</button>
+              </div>
+            </article>
+            <article class="activity-row">
+              <img src="/assets/img/activities/zumba.png" alt="Zumba">
+              <div class="activity-main">
+                <strong>ZUMBA</strong>
+                <span>Mar / Sab · 20 alumnos</span>
+              </div>
+              <div class="level">NIVEL AVANZADO</div>
+              <div class="row-actions">
+                <button type="button" class="circle purple" title="Editar">✎</button>
+                <button type="button" class="circle gray" title="Eliminar">🗑</button>
+              </div>
+            </article>
+          </div>
+          <a class="more-link" href="#actividades">VER TODAS LAS ACTIVIDADES →</a>
+        </section>
+
+        <section class="panel" id="rutinas">
+          <div class="panel-head">
+            <h2>RUTINAS</h2>
+            <button type="button" class="btn-main" id="newRoutineBtn">+ NUEVA RUTINA</button>
+          </div>
+          <p class="panel-lead">Creá, editá y asigná rutinas a tus alumnos. Cada alumno puede tener una rutina activa.</p>
+          <p class="routines-error" id="routinesError" hidden></p>
+          <div class="routines-list" id="routinesList">
+            <p class="empty-state">Cargando rutinas...</p>
+          </div>
+        </section>
+
+        <section class="panel" id="clases">
+          <div class="panel-head">
+            <h2>CLASES DE HOY</h2>
+          </div>
+          <div class="today-grid">
+            <article class="today-card">
+              <div class="time">07:30</div>
+              <div class="name">BOXEO</div>
+              <div class="meta">12 alumnos</div>
+              <img src="/assets/img/activities/boxeo.png" alt="">
+              <span class="pill on">EN CURSO</span>
+            </article>
+            <article class="today-card">
+              <div class="time">09:00</div>
+              <div class="name">PILATES</div>
+              <div class="meta">8 alumnos</div>
+              <img src="/assets/img/activities/pilates.png" alt="">
+              <span class="pill">PRÓXIMA</span>
+            </article>
+            <article class="today-card">
+              <div class="time">10:00</div>
+              <div class="name">HIDROGIMNASIA</div>
+              <div class="meta">10 alumnos</div>
+              <img src="/assets/img/activities/hidrogimnasia.png" alt="">
+              <span class="pill">PRÓXIMA</span>
+            </article>
+            <article class="today-card">
+              <div class="time">18:00</div>
+              <div class="name">ZUMBA</div>
+              <div class="meta">15 alumnos</div>
+              <img src="/assets/img/activities/zumba.png" alt="">
+              <span class="pill">PRÓXIMA</span>
+            </article>
+          </div>
+          <a class="more-link" href="#clases">VER CALENDARIO COMPLETO →</a>
+        </section>
+
+        <section class="panel" id="alumnos">
+          <div class="panel-head">
+            <h2>ALUMNOS RECIENTES</h2>
+            <label class="search">
+              <span>⌕</span>
+              <input type="search" id="studentSearch" placeholder="Buscar alumno..." autocomplete="off">
+            </label>
+          </div>
+          <div class="table-wrap">
+            <table class="table-cards" id="studentTable">
+              <thead>
+                <tr>
+                  <th>ALUMNO</th>
+                  <th>ACTIVIDAD</th>
+                  <th>ASISTENCIA</th>
+                  <th>ÚLTIMA CLASE</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="ALUMNO"><div class="user-cell"><span class="mini-av">M</span> María López</div></td>
+                  <td data-label="ACTIVIDAD">Boxeo</td>
+                  <td data-label="ASISTENCIA"><div class="progress"><span style="width:92%"></span></div> 92%</td>
+                  <td data-label="ÚLTIMA CLASE">12/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm">VER PERFIL</button></td>
+                </tr>
+                <tr>
+                  <td data-label="ALUMNO"><div class="user-cell"><span class="mini-av">J</span> Juan Pérez</div></td>
+                  <td data-label="ACTIVIDAD">Pilates</td>
+                  <td data-label="ASISTENCIA"><div class="progress"><span style="width:78%"></span></div> 78%</td>
+                  <td data-label="ÚLTIMA CLASE">11/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm">VER PERFIL</button></td>
+                </tr>
+                <tr>
+                  <td data-label="ALUMNO"><div class="user-cell"><span class="mini-av">L</span> Lucía Díaz</div></td>
+                  <td data-label="ACTIVIDAD">Zumba</td>
+                  <td data-label="ASISTENCIA"><div class="progress"><span style="width:85%"></span></div> 85%</td>
+                  <td data-label="ÚLTIMA CLASE">10/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm">VER PERFIL</button></td>
+                </tr>
+                <tr>
+                  <td data-label="ALUMNO"><div class="user-cell"><span class="mini-av">C</span> Carlos Ruiz</div></td>
+                  <td data-label="ACTIVIDAD">Hidrogimnasia</td>
+                  <td data-label="ASISTENCIA"><div class="progress"><span style="width:70%"></span></div> 70%</td>
+                  <td data-label="ÚLTIMA CLASE">09/09/2026</td>
+                  <td data-label="ACCIONES"><button type="button" class="btn-sm">VER PERFIL</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <a class="more-link" href="#alumnos">VER TODOS LOS ALUMNOS →</a>
+        </section>
+
+        <section class="panel" id="ayuda">
+          <div class="panel-head"><h2>AYUDA</h2></div>
+          <div class="help-list">
+            <details open>
+              <summary>¿Cómo hablo con un alumno?</summary>
+              <p>Entrá a Mensajes, elegí el contacto y enviá el texto. La conversación queda en tu panel.</p>
+            </details>
+            <details>
+              <summary>¿Cómo organizo las clases del día?</summary>
+              <p>En Clases de hoy ves el horario, la actividad y si está en curso o próxima.</p>
+            </details>
+            <details>
+              <summary>¿Puedo buscar un alumno?</summary>
+              <p>Usá el buscador de Alumnos recientes. Filtra por nombre o actividad.</p>
+            </details>
+            <details>
+              <summary>¿Cómo asigno una rutina?</summary>
+              <p>En Rutinas creá o editá la rutina y tocá “Asignar rutina”. Elegí alumnos en la grilla y confirmá.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="panel" id="notificaciones">
+          <div class="panel-head"><h2>NOTIFICACIONES</h2></div>
+          <ul class="note-list">
+            <li><strong>Clase en curso</strong><span>Boxeo · 07:30 · 12 alumnos</span></li>
+            <li><strong>Próxima clase</strong><span>Pilates · 09:00 · 8 alumnos</span></li>
+          </ul>
+        </section>
+
+        <section class="panel" id="mensajes">
+          <h2 class="chat-section-title">MENSAJES</h2>
+          <p class="chat-section-sub">Hablá con administración y con tus alumnos.</p>
+          <div id="entrenador-chat-root"></div>
+        </section>
+      </main>
+
+      <div data-site-footer></div>
+    </div>
+  </div>
+
+  <div class="sheet" id="activitySheet" hidden>
+    <form class="sheet-card" id="activityForm">
+      <h3 id="activitySheetTitle">Nueva actividad</h3>
+      <label>Nombre<input type="text" name="name" id="activityName" required maxlength="40"></label>
+      <label>Horario<input type="text" name="schedule" id="activitySchedule" required maxlength="40"></label>
+      <label>Nivel
+        <select name="level" id="activityLevel">
+          <option>NIVEL PRINCIPIANTE</option>
+          <option>NIVEL INTERMEDIO</option>
+          <option>NIVEL AVANZADO</option>
+        </select>
+      </label>
+      <div class="sheet-actions">
+        <button type="button" class="btn-sm" id="activityCancel">CANCELAR</button>
+        <button type="submit" class="btn-main">GUARDAR</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="sheet" id="profileSheet" hidden>
+    <div class="sheet-card">
+      <h3 id="profileTitle">Alumno</h3>
+      <p id="profileBody"></p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-main" id="profileClose">CERRAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet" id="routineSheet" hidden>
+    <form class="sheet-card sheet-card-wide" id="routineForm">
+      <h3 id="routineSheetTitle">Nueva rutina</h3>
+      <label>Título<input type="text" id="routineTitle" required maxlength="120" placeholder="Ej: Fuerza full body"></label>
+      <label>Descripción<textarea id="routineDescription" rows="2" maxlength="500" placeholder="Objetivo de la rutina"></textarea></label>
+      <label>Video de YouTube<input type="url" id="routineVideo" maxlength="500" placeholder="https://www.youtube.com/watch?v=..."></label>
+      <label>Imagen (URL)<input type="text" id="routineImage" maxlength="255" placeholder="/assets/img/activities/hero.png"></label>
+      <div class="exercise-editor">
+        <div class="exercise-editor-head">
+          <strong>Ejercicios</strong>
+          <button type="button" class="btn-sm" id="addExerciseBtn">+ EJERCICIO</button>
+        </div>
+        <div id="exerciseRows"></div>
+      </div>
+      <p class="routines-error" id="routineFormError" hidden></p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-sm" id="routineCancel">CANCELAR</button>
+        <button type="submit" class="btn-main" id="routineSave">GUARDAR</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="sheet" id="assignSheet" hidden>
+    <div class="sheet-card sheet-card-wide">
+      <h3 id="assignSheetTitle">Asignar rutina</h3>
+      <p class="panel-lead" id="assignSheetLead">Elegí a qué alumnos asignar esta rutina.</p>
+      <label class="search assign-search">
+        <span>⌕</span>
+        <input type="search" id="assignSearch" placeholder="Buscar alumno..." autocomplete="off">
+      </label>
+      <div class="assign-grid" id="assignGrid"></div>
+      <p class="routines-error" id="assignError" hidden></p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-sm" id="assignCancel">CANCELAR</button>
+        <button type="button" class="btn-main" id="assignConfirm">ASIGNAR RUTINA</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/shared/site.js?v=10"></script>
+  <script src="/assets/js/shared/i18n.js?v=10"></script>
+  <script src="/assets/js/shared/shell.js?v=7"></script>
+  <script src="/assets/js/shared/api.js?v=7"></script>
+  <script src="/assets/js/shared/auth.js?v=5"></script>
+  <script src="/assets/js/shared/chat.js?v=4"></script>
+  <script src="/assets/js/shared/settings.js?v=11"></script>
+  <script src="/assets/js/entrenador/dashboard.js?v=10"></script>
+  <script src="/assets/js/entrenador/rutinas.js?v=3"></script>
+</body>
+</html>

@@ -71,5 +71,14 @@ foreach ($files as $file) {
     }
 }
 
-require __DIR__ . '/seed.php';
-fwrite(STDOUT, "Migraciones y seed listos.\n");
+$appEnv = strtolower((string) (getenv('APP_ENV') ?: 'development'));
+$seedFlag = strtolower((string) (getenv('SEED_DEMO') ?: ''));
+$allowSeed = in_array($appEnv, ['development', 'dev', 'local'], true)
+    || in_array($seedFlag, ['1', 'true', 'yes', 'on'], true);
+
+if ($allowSeed) {
+    require __DIR__ . '/seed.php';
+    fwrite(STDOUT, "Migraciones y seed listos.\n");
+} else {
+    fwrite(STDOUT, "Migraciones listas (seed omitido: APP_ENV={$appEnv}).\n");
+}

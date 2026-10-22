@@ -89,8 +89,23 @@ class AdminController {
             JsonResponse::error('El usuario no existe.', 404);
         }
 
-        $this->model->delete($userId);
-        JsonResponse::ok([], 'Usuario eliminado');
+        if (($existing['role'] ?? '') === 'admin') {
+            $admins = $this->model->countByRole('admin');
+            if ($admins <= 1) {
+                JsonResponse::error('No podés eliminar la única cuenta de administrador.', 400);
+            }
+        }
+
+        if (!$this->model->delete($userId)) {
+            JsonResponse::error('No se pudo eliminar la cuenta. Intentá de nuevo.', 500);
+        }
+
+        // Doble verificación: si sigue existiendo, falló el borrado.
+        if ($this->model->findById($userId)) {
+            JsonResponse::error('La cuenta sigue existiendo. No se completó la eliminación.', 500);
+        }
+
+        JsonResponse::ok([], 'Usuario eliminado de forma permanente');
     }
 
     private function mapUser(array $row): array {

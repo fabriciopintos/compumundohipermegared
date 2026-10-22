@@ -125,11 +125,42 @@ class AuthController {
 
         $user = $this->model->findAuthById($userId);
         if (!$user || !password_verify($current, $user['password_hash'])) {
-            JsonResponse::error('La contraseña actual no es correcta.', 401);
+            // 422 (no 401): el token sigue válido; solo falló la contraseña actual.
+            JsonResponse::error('La contraseña actual no es correcta.', 422);
         }
 
         $this->model->updatePassword($userId, password_hash($next, PASSWORD_DEFAULT));
         JsonResponse::ok([], 'Contraseña actualizada');
+    }
+
+    public function deleteAccount() {
+        $userId = RequestAuth::userId();
+        $data = $this->readJson();
+        $password = (string) ($data['password'] ?? $data['currentPassword'] ?? $data['current_password'] ?? '');
+
+        $user = $this->model->findAuthById($userId);
+        if (!$user) {
+            JsonResponse::error('Necesitás iniciar sesión para continuar.', 401);
+        }
+
+        if ($password === '' || !password_verify($password, $user['password_hash'])) {
+            JsonResponse::error('Confirmá tu contraseña para eliminar la cuenta.', 422);
+        }
+
+        if (($user['role'] ?? '') === 'admin') {
+            // Evitar dejar el sistema sin administradores por auto-borrado accidental.
+            $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE role = 'admin'");
+            $stmt->execute();
+            if ((int) $stmt->fetchColumn() <= 1) {
+                JsonResponse::error('No podés eliminar la única cuenta de administrador.', 400);
+            }
+        }
+
+        if (!$this->model->deleteAccount($userId)) {
+            JsonResponse::error('No se pudo eliminar la cuenta. Intentá de nuevo.', 500);
+        }
+
+        JsonResponse::ok([], 'Cuenta eliminada de forma permanente');
     }
 
     private function publicUser(array $user): array {

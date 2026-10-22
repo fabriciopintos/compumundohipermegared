@@ -3,13 +3,36 @@ RewriteEngine On
 
 DirectoryIndex index.html
 
-RewriteRule ^login/?$ dist/pages/login.html [L]
-RewriteRule ^dashboard/?$ dist/pages/DashboardUsu.html [L]
-RewriteRule ^rutinas/?$ dist/pages/Rutinas.html [L]
-RewriteRule ^planes/?$ dist/pages/Planes.html [L]
-RewriteRule ^compra/?$ dist/pages/Compra.html [L]
-RewriteRule ^dashboard-entrenador/?$ dist/pages/DashboardEntrenador.html [L]
-RewriteRule ^dashboard-admin/?$ dist/pages/DashboardAdmin.html [L]
+# Paginas de la app
+RewriteRule ^login/?$ pages/login.html [L]
+RewriteRule ^dashboard/?$ pages/DashboardUsu.html [L]
+RewriteRule ^rutinas/?$ pages/Rutinas.html [L]
+RewriteRule ^planes/?$ pages/Planes.html [L]
+RewriteRule ^compra/?$ pages/Compra.html [L]
+RewriteRule ^dashboard-entrenador/?$ pages/DashboardEntrenador.html [L]
+RewriteRule ^dashboard-admin/?$ pages/DashboardAdmin.html [L]
+
+# Compatibilidad /dist/...
+RewriteRule ^dist/css/(loader|motion|footer|responsive|mobile|settings|chat)\.css$ assets/css/shared/$1.css [L]
+RewriteRule ^dist/css/(style|login|dashboard|dashboard-admin|dashboard-entrenador|rutinas)\.css$ assets/css/pages/$1.css [L]
+RewriteRule ^dist/js/(api|auth|site|i18n|login|settings|shell|chat)\.js$ assets/js/shared/$1.js [L]
+RewriteRule ^dist/js/admin/(.*)$ assets/js/admin/$1 [L]
+RewriteRule ^dist/js/entrenador/(.*)$ assets/js/entrenador/$1 [L]
+RewriteRule ^dist/js/usuario/(.*)$ assets/js/usuario/$1 [L]
+RewriteRule ^dist/pages/(.*)$ pages/$1 [L]
+
+# Compatibilidad /imagenes/... antiguas
+RewriteRule ^imagenes/favicon\.svg$ assets/img/brand/favicon.svg [L]
+RewriteRule ^imagenes/mancuerna\.svg$ assets/img/brand/mancuerna.svg [L]
+RewriteRule ^imagenes/Rectangle([+]|%20)?3\.png$ assets/img/activities/hero.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?6\.png$ assets/img/activities/musculacion.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?7\.png$ assets/img/activities/pilates.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?8\.png$ assets/img/activities/boxeo.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?10\.png$ assets/img/activities/hidrogimnasia.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?11\.png$ assets/img/activities/zumba.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?12\.png$ assets/img/activities/spinning.png [L,NC]
+RewriteRule ^imagenes/Rectangle([+]|%20)?35\.png$ assets/img/ui/mapa.png [L,NC]
+RewriteRule ^imagenes/image([+]|%20)?4\.png$ assets/img/activities/staff.png [L,NC]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

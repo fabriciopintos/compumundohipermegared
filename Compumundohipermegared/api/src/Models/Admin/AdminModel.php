@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\Admin;
 
+use App\Models\Auth\AuthModel;
 use PDO;
 
 class AdminModel {
@@ -68,9 +69,9 @@ class AdminModel {
     }
 
     public function delete(int $id): bool {
-        $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
-        $stmt->execute([':id' => $id]);
-        return $stmt->rowCount() > 0;
+        // Reutiliza el borrado definitivo (cascada + verificación).
+        $auth = new AuthModel($this->db);
+        return $auth->deleteAccount($id);
     }
 
     public function findById(int $id): ?array {

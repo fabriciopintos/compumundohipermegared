@@ -1,0 +1,63 @@
+// front/assets/js/shared/api.js
+// El mensajero: el HTML nunca habla con PHP directo. Pasa por acá.
+
+const API = {
+    // En Docker: http://localhost:8080/api
+    urlBase: '/api',
+
+    async request(endpoint, method = 'GET', data = null) {
+        const url = this.urlBase + endpoint;
+
+        const opciones = {
+            method: method,
+            headers: { 'Content-Type': 'application/json' }
+        };
+
+        const token = localStorage.getItem('fitpower_token');
+        if (token) {
+            opciones.headers.Authorization = 'Bearer ' + token;
+        }
+
+        // GET/DELETE sin body. POST/PUT/PATCH con JSON.
+        const methodUpper = String(method || 'GET').toUpperCase();
+        if (data != null && methodUpper !== 'GET' && methodUpper !== 'HEAD') {
+            opciones.body = JSON.stringify(data);
+        }
+        if (methodUpper === 'GET' || methodUpper === 'HEAD') {
+            delete opciones.headers['Content-Type'];
+        }
+
+        try {
+            const respuesta = await fetch(url, opciones);
+            const raw = await respuesta.text();
+            let json = null;
+            if (raw) {
+                try {
+                    json = JSON.parse(raw);
+                } catch (parseErr) {
+                    console.error('Respuesta no JSON de la API:', parseErr);
+                    return {
+                        status: 'error',
+                        message: 'La API devolvió una respuesta inválida (' + respuesta.status + ')',
+                    };
+                }
+            } else {
+                json = { status: 'error', message: 'Respuesta vacía de la API (' + respuesta.status + ')' };
+            }
+            // 401 = sesión inválida. Errores de negocio (ej. contraseña mala) usan 422.
+            if (respuesta.status === 401 && endpoint !== '/login') {
+                localStorage.removeItem('fitpower_token');
+                localStorage.removeItem('fitpower_role');
+                const path = window.location.pathname || '';
+                const isPublic = path === '/' || path.endsWith('/login') || path.includes('login.html') || path.endsWith('index.html');
+                if (!isPublic) {
+                    window.location.href = '/login';
+                }
+            }
+            return json;
+        } catch (error) {
+            console.error('Error de conexión con la API:', error);
+            return { status: 'error', message: 'No se pudo conectar con la API' };
+        }
+    }
+};

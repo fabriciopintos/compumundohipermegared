@@ -50,12 +50,12 @@ $activityIds = [];
 
 if ($activityCount === 0) {
     $activities = [
-        ['Boxeo', 'boxeo', '/imagenes/Rectangle 8.png'],
-        ['Hidrogimnasia', 'hidrogimnasia', '/imagenes/Rectangle 10.png'],
-        ['Pilates', 'pilates', '/imagenes/Rectangle 7.png'],
-        ['Zumba', 'zumba', '/imagenes/Rectangle 11.png'],
-        ['Musculación', 'musculacion', '/imagenes/Rectangle 6.png'],
-        ['Spinning', 'spinning', '/imagenes/Rectangle 12.png'],
+        ['Boxeo', 'boxeo', '/assets/img/activities/boxeo.png'],
+        ['Hidrogimnasia', 'hidrogimnasia', '/assets/img/activities/hidrogimnasia.png'],
+        ['Pilates', 'pilates', '/assets/img/activities/pilates.png'],
+        ['Zumba', 'zumba', '/assets/img/activities/zumba.png'],
+        ['Musculación', 'musculacion', '/assets/img/activities/musculacion.png'],
+        ['Spinning', 'spinning', '/assets/img/activities/spinning.png'],
     ];
 
     $insertActivity = $db->prepare(
@@ -158,54 +158,24 @@ try {
     $routineCount = -1;
 }
 
-if ($routineCount === 0 && $entrenadorId) {
-    $seedRoutines = [
-        [
-            'Fuerza',
-            'Sesión de fuerza con patrones básicos y descanso controlado.',
-            'https://www.youtube.com/watch?v=HE45jVN7XKM',
-            '/imagenes/Rectangle%203.png',
-            [
-                ['name' => 'Sentadilla', 'detail' => '4 x 10', 'rest' => '90s'],
-                ['name' => 'Press banca', 'detail' => '4 x 8', 'rest' => '90s'],
-                ['name' => 'Remo con barra', 'detail' => '4 x 10', 'rest' => '75s'],
-                ['name' => 'Press militar', 'detail' => '3 x 10', 'rest' => '75s'],
-            ],
-        ],
-        [
-            'Hipertrofia',
-            'Volumen controlado para ganar músculo con descanso justo.',
-            'https://www.youtube.com/watch?v=nxisr1AalNc',
-            '/imagenes/Rectangle%206.png',
-            [
-                ['name' => 'Zancadas', 'detail' => '3 x 12', 'rest' => '60s'],
-                ['name' => 'Aperturas', 'detail' => '3 x 12', 'rest' => '60s'],
-                ['name' => 'Jalón al pecho', 'detail' => '4 x 10', 'rest' => '75s'],
-            ],
-        ],
-        [
-            'Cardio',
-            'Trabajo cardiovascular con intervalos y movilidad.',
-            'https://www.youtube.com/watch?v=xSUXMwqZ3z0',
-            '/imagenes/Rectangle%208.png',
-            [
-                ['name' => 'Calentamiento', 'detail' => '8 min', 'rest' => '-'],
-                ['name' => 'Bolsa / sombra', 'detail' => "6 x 2'", 'rest' => '60s'],
-                ['name' => 'Burpees', 'detail' => '4 x 10', 'rest' => '50s'],
-            ],
-        ],
-        [
-            'Movilidad',
-            'Movilidad articular y respiración para recuperar rango.',
-            'https://www.youtube.com/watch?v=2IcWJobNDck',
-            '/imagenes/Rectangle%207.png',
-            [
-                ['name' => 'Respiración', 'detail' => '3 min', 'rest' => '-'],
-                ['name' => 'Gato-vaca', 'detail' => '2 x 12', 'rest' => '30s'],
-                ['name' => 'Apertura de cadera', 'detail' => '2 x 10', 'rest' => '30s'],
-            ],
-        ],
-    ];
+$hasDetailedCatalog = 0;
+try {
+    // Marcador v2: series/reps del manual (ej. Farmer Walk + HIIT 40 s).
+    $hasDetailedCatalog = (int) $db->query(
+        "SELECT COUNT(*) FROM routines WHERE exercises_json LIKE '%Farmer Walk%' AND exercises_json LIKE '%10 rondas × 40 s%'"
+    )->fetchColumn();
+} catch (Exception $e) {
+    $hasDetailedCatalog = 0;
+}
+
+if ($entrenadorId && ($routineCount === 0 || $hasDetailedCatalog === 0)) {
+    $seedRoutines = require __DIR__ . '/fitpower_routines.php';
+
+    try {
+        $db->exec('DELETE FROM routines');
+    } catch (Exception $e) {
+        // si falla el wipe, igual intentamos insertar
+    }
 
     $insertRoutine = $db->prepare(
         'INSERT INTO routines (title, description, video_url, image_url, exercises_json, created_by)
@@ -221,6 +191,7 @@ if ($routineCount === 0 && $entrenadorId) {
             ':created_by' => $entrenadorId,
         ]);
     }
+    fwrite(STDOUT, "Catálogo FitPower detallado: " . count($seedRoutines) . " rutinas cargadas.\n");
 }
 
 fwrite(STDOUT, "Cuentas de desarrollo (password: cambiar-en-desarrollo):\n");

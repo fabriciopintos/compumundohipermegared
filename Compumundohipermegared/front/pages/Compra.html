@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPower | Compra</title>
+  <meta name="description" content="Checkout ficticio de planes FitPower.">
+  <link rel="icon" type="image/svg+xml" href="/assets/img/brand/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Antic+Slab&family=Antic+Didone&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/shared/loader.css?v=3">
+  <link rel="stylesheet" href="/assets/css/shared/motion.css?v=4">
+  <link rel="stylesheet" href="/assets/css/pages/dashboard.css?v=10">
+  <link rel="stylesheet" href="/assets/css/shared/settings.css?v=9">
+  <link rel="stylesheet" href="/assets/css/shared/footer.css?v=4">
+  <link rel="stylesheet" href="/assets/css/shared/responsive.css?v=8">
+</head>
+<body class="dash-user-body">
+  <div id="site-loader" aria-busy="true" aria-live="polite">
+    <div class="site-loader-inner">
+      <div class="site-loader-orb" aria-hidden="true"></div>
+      <div class="site-loader-brand">FITPOWER</div>
+      <div class="site-loader-bar" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+  <script>window.__fpLoaderAt = Date.now();</script>
+  <script>
+    if (!localStorage.getItem('fitpower_token')) {
+      window.location.replace('/login');
+    }
+  </script>
+
+  <nav class="navbar-fitpower">
+    <div class="dash-shell nav-shell">
+      <a class="brand-title" href="/dashboard">FITPOWER</a>
+      <button type="button" class="lang-toggle" data-lang-toggle data-i18n="lang.label">ES</button>
+      <button class="nav-burger" type="button" id="navBurger" aria-label="Menú" aria-expanded="false" aria-controls="navLinks">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/rutinas" data-i18n="nav.routines">RUTINAS</a></li>
+        <li><a href="/dashboard#actividades" data-i18n="nav.activities">ACTIVIDADES</a></li>
+        <li><a href="/planes" data-i18n="nav.plans">PLANES</a></li>
+        <li><a href="/dashboard#mensajes" data-i18n="nav.messages">MENSAJES</a></li>
+        <li><a href="#configuracion" data-open-settings data-i18n="nav.settings">CONFIGURACIÓN</a></li>
+        <li><a href="/" id="logout-btn" data-i18n="nav.logout">SALIR</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="dash-shell" id="contenido">
+    <section class="checkout-page">
+      <a class="checkout-back" href="/planes" data-i18n="dash.checkoutBack">← Volver a planes</a>
+      <h1 class="section-title" data-i18n="dash.checkoutTitle">COMPRA</h1>
+      <p class="section-sub" data-i18n="dash.checkoutSub">COMPLETÁ TUS DATOS PARA SIMULAR LA COMPRA DEL PLAN</p>
+      <p class="checkout-demo" data-i18n="dash.checkoutDemo">Demo: no se cobra nada real.</p>
+
+      <div class="checkout-layout">
+        <aside class="checkout-summary">
+          <h2 data-i18n="dash.checkoutSummary">Tu plan</h2>
+          <p class="checkout-plan-name" id="checkoutPlanName">PREMIUM</p>
+          <p class="checkout-plan-price" id="checkoutPlanPrice">$ 2.500</p>
+          <p class="checkout-plan-desc" id="checkoutPlanDesc"></p>
+        </aside>
+
+        <form class="checkout-form" id="checkoutForm" novalidate>
+          <fieldset>
+            <legend data-i18n="dash.checkoutBilling">Datos de facturación</legend>
+            <label>
+              <span data-i18n="dash.checkoutFullName">Nombre completo</span>
+              <input type="text" id="billName" name="name" autocomplete="name" required maxlength="120">
+            </label>
+            <label>
+              <span data-i18n="dash.checkoutEmail">Correo electrónico</span>
+              <input type="email" id="billEmail" name="email" autocomplete="email" required maxlength="255">
+            </label>
+            <label>
+              <span data-i18n="dash.checkoutPhone">Teléfono</span>
+              <input type="tel" id="billPhone" name="phone" autocomplete="tel" required maxlength="40" placeholder="+598 99 123 456">
+            </label>
+            <label>
+              <span data-i18n="dash.checkoutDoc">Documento / CI</span>
+              <input type="text" id="billDoc" name="document" required maxlength="20" placeholder="1.234.567-8">
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend data-i18n="dash.checkoutPayment">Pago (ficticio)</legend>
+            <label>
+              <span data-i18n="dash.checkoutCardName">Nombre en la tarjeta</span>
+              <input type="text" id="cardName" name="cardName" autocomplete="cc-name" required maxlength="120">
+            </label>
+            <label>
+              <span data-i18n="dash.checkoutCardNumber">Número de tarjeta</span>
+              <input type="text" id="cardNumber" name="cardNumber" inputmode="numeric" autocomplete="cc-number" required maxlength="19" placeholder="4242 4242 4242 4242">
+            </label>
+            <div class="checkout-row">
+              <label>
+                <span data-i18n="dash.checkoutExpiry">Vencimiento</span>
+                <input type="text" id="cardExpiry" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" required maxlength="5" placeholder="MM/AA">
+              </label>
+              <label>
+                <span data-i18n="dash.checkoutCvv">CVV</span>
+                <input type="password" id="cardCvv" name="cardCvv" inputmode="numeric" autocomplete="cc-csc" required maxlength="4" placeholder="123">
+              </label>
+            </div>
+          </fieldset>
+
+          <p class="checkout-error" id="checkoutError" hidden></p>
+          <button type="submit" class="btn-morado checkout-submit" id="checkoutSubmit" data-i18n="dash.checkoutPay">CONFIRMAR COMPRA</button>
+        </form>
+      </div>
+
+      <div class="checkout-success" id="checkoutSuccess" hidden>
+        <h2 data-i18n="dash.checkoutSuccessTitle">¡Compra simulada!</h2>
+        <p id="checkoutSuccessText"></p>
+        <div class="checkout-success-actions">
+          <a class="btn-morado" href="/planes" data-i18n="dash.checkoutBackPlans">VOLVER A PLANES</a>
+          <a class="btn-morado" href="/dashboard" data-i18n="dash.checkoutGoDash">IR AL PANEL</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="/assets/js/shared/site.js?v=10"></script>
+  <script src="/assets/js/shared/i18n.js?v=10"></script>
+  <script src="/assets/js/shared/api.js?v=7"></script>
+  <script src="/assets/js/shared/auth.js?v=5"></script>
+  <script src="/assets/js/shared/settings.js?v=11"></script>
+  <script src="/assets/js/usuario/compra.js?v=2"></script>
+</body>
+</html>

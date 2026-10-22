@@ -1,7 +1,16 @@
 <?php
 namespace App\Utils;
 
+use PDO;
+
 class RequestAuth {
+    /** @var PDO|null */
+    private static $db = null;
+
+    public static function setDb(PDO $db): void {
+        self::$db = $db;
+    }
+
     public static function userId(): int {
         $payload = self::payload();
         return (int) $payload['sub'];
@@ -30,6 +39,16 @@ class RequestAuth {
             JsonResponse::error('Necesitás iniciar sesión para continuar.', 401);
         }
 
+        // Si la cuenta fue eliminada, el token deja de ser válido de inmediato.
+        $fresh = self::loadActiveUser($userId);
+        if (!$fresh) {
+            JsonResponse::error('Necesitás iniciar sesión para continuar.', 401);
+        }
+
+        $payload['role'] = $fresh['role'];
+        $payload['email'] = $fresh['email'];
+        $payload['name'] = $fresh['name'];
+
         return $payload;
     }
 
@@ -40,6 +59,24 @@ class RequestAuth {
             JsonResponse::error('No tenés permiso para esta acción.', 403);
         }
         return $payload;
+    }
+
+    private static function loadActiveUser(int $userId): ?array {
+        if (!self::$db instanceof PDO) {
+            error_log('RequestAuth DB not configured');
+            return null;
+        }
+        try {
+            $stmt = self::$db->prepare(
+                'SELECT id, name, email, role FROM users WHERE id = :id LIMIT 1'
+            );
+            $stmt->execute([':id' => $userId]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row ?: null;
+        } catch (\Throwable $err) {
+            error_log('RequestAuth loadActiveUser failed: ' . $err->getMessage());
+            return null;
+        }
     }
 
     private static function authorizationHeader(): string {

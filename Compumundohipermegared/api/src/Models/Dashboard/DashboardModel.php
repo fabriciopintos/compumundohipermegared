@@ -46,44 +46,60 @@ class DashboardModel {
     }
 
     public function enroll(int $userId, int $sessionId): array {
-        $sessionStmt = $this->db->prepare(
-            'SELECT id, capacity FROM class_sessions WHERE id = :id LIMIT 1'
-        );
-        $sessionStmt->execute([':id' => $sessionId]);
-        $session = $sessionStmt->fetch(PDO::FETCH_ASSOC);
-        if (!$session) {
-            return ['ok' => false, 'code' => 404, 'message' => 'La clase no existe.'];
+        try {
+            $this->db->beginTransaction();
+
+            $sessionStmt = $this->db->prepare(
+                'SELECT id, capacity FROM class_sessions WHERE id = :id LIMIT 1 FOR UPDATE'
+            );
+            $sessionStmt->execute([':id' => $sessionId]);
+            $session = $sessionStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$session) {
+                $this->db->rollBack();
+                return ['ok' => false, 'code' => 404, 'message' => 'La clase no existe.'];
+            }
+
+            $existsStmt = $this->db->prepare(
+                'SELECT 1 FROM enrollments WHERE user_id = :user_id AND class_session_id = :session_id'
+            );
+            $existsStmt->execute([
+                ':user_id' => $userId,
+                ':session_id' => $sessionId,
+            ]);
+            if ($existsStmt->fetchColumn()) {
+                $this->db->rollBack();
+                return ['ok' => false, 'code' => 409, 'message' => 'Ya estás anotado en esta clase.'];
+            }
+
+            $countStmt = $this->db->prepare(
+                'SELECT COUNT(*) FROM enrollments WHERE class_session_id = :session_id'
+            );
+            $countStmt->execute([':session_id' => $sessionId]);
+            $enrolled = (int) $countStmt->fetchColumn();
+            if ($enrolled >= (int) $session['capacity']) {
+                $this->db->rollBack();
+                return ['ok' => false, 'code' => 409, 'message' => 'No hay cupos disponibles.'];
+            }
+
+            $insert = $this->db->prepare(
+                'INSERT INTO enrollments (user_id, class_session_id) VALUES (:user_id, :session_id)'
+            );
+            $insert->execute([
+                ':user_id' => $userId,
+                ':session_id' => $sessionId,
+            ]);
+
+            $this->db->commit();
+            return ['ok' => true, 'message' => 'Te anotaste correctamente.'];
+        } catch (\PDOException $err) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            if ((string) ($err->errorInfo[0] ?? '') === '23000') {
+                return ['ok' => false, 'code' => 409, 'message' => 'Ya estás anotado en esta clase.'];
+            }
+            throw $err;
         }
-
-        $existsStmt = $this->db->prepare(
-            'SELECT 1 FROM enrollments WHERE user_id = :user_id AND class_session_id = :session_id'
-        );
-        $existsStmt->execute([
-            ':user_id' => $userId,
-            ':session_id' => $sessionId,
-        ]);
-        if ($existsStmt->fetchColumn()) {
-            return ['ok' => false, 'code' => 409, 'message' => 'Ya estás anotado en esta clase.'];
-        }
-
-        $countStmt = $this->db->prepare(
-            'SELECT COUNT(*) FROM enrollments WHERE class_session_id = :session_id'
-        );
-        $countStmt->execute([':session_id' => $sessionId]);
-        $enrolled = (int) $countStmt->fetchColumn();
-        if ($enrolled >= (int) $session['capacity']) {
-            return ['ok' => false, 'code' => 409, 'message' => 'No hay cupos disponibles.'];
-        }
-
-        $insert = $this->db->prepare(
-            'INSERT INTO enrollments (user_id, class_session_id) VALUES (:user_id, :session_id)'
-        );
-        $insert->execute([
-            ':user_id' => $userId,
-            ':session_id' => $sessionId,
-        ]);
-
-        return ['ok' => true, 'message' => 'Te anotaste correctamente.'];
     }
 
     public function unenroll(int $userId, int $sessionId): array {
