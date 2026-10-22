@@ -1,6 +1,7 @@
 (function (global) {
   var drawerState = {
     mounted: false,
+    triggersBound: false,
     open: false,
     options: null,
   };
@@ -146,8 +147,24 @@
     return document.getElementById('settings-drawer');
   }
 
+  function resolveRole() {
+    if (drawerState.options && drawerState.options.role) return drawerState.options.role;
+    try {
+      return localStorage.getItem('fitpower_role') || 'usuario';
+    } catch (err) {
+      return 'usuario';
+    }
+  }
+
   function openSettings() {
     ensureDrawer();
+    if (!drawerState.mounted) {
+      mountSettings({
+        role: resolveRole(),
+        user: (drawerState.options && drawerState.options.user) || {},
+        skipHashOpen: true,
+      });
+    }
     var drawer = document.getElementById('settings-drawer');
     var backdrop = document.getElementById('settings-drawer-backdrop');
     if (!drawer) return;
@@ -161,6 +178,13 @@
       });
     }
     document.body.classList.add('settings-drawer-open');
+    document.body.classList.remove('nav-lock');
+    var sidebar = document.querySelector('[data-sidebar]');
+    var layout = document.querySelector('.layout');
+    var sbBackdrop = document.querySelector('[data-sidebar-backdrop]');
+    if (sidebar) sidebar.classList.remove('is-open');
+    if (layout) layout.classList.remove('is-collapsed');
+    if (sbBackdrop) sbBackdrop.hidden = true;
     var closeBtn = document.getElementById('settings-drawer-close');
     if (closeBtn) closeBtn.focus();
   }
@@ -193,9 +217,11 @@
   }
 
   function bindOpenTriggers() {
+    if (drawerState.triggersBound) return;
+    drawerState.triggersBound = true;
     document.addEventListener('click', function (event) {
-      var trigger = event.target.closest('a, button, [data-open-settings]');
-      if (!isSettingsTrigger(trigger)) return;
+      var trigger = event.target.closest('a[href="#configuracion"], a[data-open-settings], button[data-open-settings], [data-open-settings]');
+      if (!trigger || !isSettingsTrigger(trigger)) return;
       event.preventDefault();
       event.stopPropagation();
       openSettings();
@@ -477,15 +503,15 @@
       });
     }
 
-    if (!drawerState.mounted) {
-      bindOpenTriggers();
-      drawerState.mounted = true;
-    }
+    drawerState.mounted = true;
+    bindOpenTriggers();
 
-    if (location.hash === '#configuracion') {
+    if (!options.skipHashOpen && location.hash === '#configuracion') {
       openSettings();
     }
   }
+
+  bindOpenTriggers();
 
   global.mountFitpowerSettings = mountSettings;
   global.openFitpowerSettings = openSettings;

@@ -28,6 +28,8 @@ iframe {
 }
 
 .menu-toggle {
+  position: relative;
+  z-index: 20;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -40,17 +42,20 @@ iframe {
   font-size: 1.15rem;
   cursor: pointer;
   flex: 0 0 auto;
+  pointer-events: auto;
 }
 
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 35;
+  z-index: 100;
   background: rgba(0, 0, 0, 0.62);
+  pointer-events: auto;
 }
 
 .sidebar-backdrop[hidden] {
   display: none !important;
+  pointer-events: none !important;
 }
 
 body.nav-lock {
@@ -82,13 +87,20 @@ body.nav-lock {
 }
 
 @media (max-width: 900px) {
+  /*
+   * .layout has z-index:1 in dashboard CSS, which traps the sidebar in a low
+   * stacking context. The backdrop (sibling, z-index 100) then paints ON TOP
+   * of the menu and steals all taps. Drop layout stacking on mobile so the
+   * fixed sidebar can sit above the backdrop.
+   */
   .layout {
     grid-template-columns: 1fr;
+    z-index: auto !important;
   }
 
   .layout > .sidebar {
     position: fixed;
-    z-index: 40;
+    z-index: 110;
     top: 0;
     left: 0;
     bottom: 0;
@@ -100,10 +112,18 @@ body.nav-lock {
     transition: transform 0.22s ease;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     border-bottom: 0;
+    pointer-events: auto;
   }
 
   .layout > .sidebar.is-open {
     transform: none;
+  }
+
+  .layout > .sidebar a,
+  .layout > .sidebar button {
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
   }
 
   .layout > .sidebar .nav {

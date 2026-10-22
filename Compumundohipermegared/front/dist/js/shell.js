@@ -1,5 +1,5 @@
 (function () {
-  /* shell v5 — skip #configuracion scroll; respect settings drawer Escape */
+  /* shell v6 — hamburger + sidebar; skip #configuracion scroll; respect settings drawer */
   function initShell() {
     var layout = document.querySelector('.layout');
     var sidebar = document.querySelector('[data-sidebar]');
@@ -24,9 +24,9 @@
       }
 
       layout.classList.remove('is-collapsed');
-      sidebar.classList.toggle('is-open', open);
+      sidebar.classList.toggle('is-open', !!open);
       if (backdrop) backdrop.hidden = !open;
-      document.body.classList.toggle('nav-lock', open);
+      document.body.classList.toggle('nav-lock', !!open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
@@ -36,7 +36,9 @@
 
     toggle.setAttribute('aria-expanded', isDesktop() ? 'true' : 'false');
 
-    toggle.addEventListener('click', function () {
+    toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
       setOpen(!isOpen());
     });
 

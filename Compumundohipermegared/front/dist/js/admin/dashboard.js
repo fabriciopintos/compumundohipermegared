@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     return;
   }
 
+  if (typeof mountFitpowerSettings === 'function') {
+    mountFitpowerSettings({ role: 'admin', user: { name: 'Admin', role: 'admin' } });
+  }
+
   const usersTableBody = document.getElementById('usersTableBody');
   const trainersTableBody = document.getElementById('trainersTableBody');
   const usersError = document.getElementById('usersError');

@@ -7,6 +7,7 @@
   --fp-dur-fast: 0.22s;
 }
 
+/* Avoid transform on .layout — it breaks position:fixed sidebars (hamburger menu). */
 html.fp-page-enter .layout,
 html.fp-page-enter .navbar-fitpower,
 html.fp-page-enter main,
@@ -16,6 +17,15 @@ html.fp-page-enter .login-top,
 html.fp-page-enter .login-main,
 html.fp-page-enter .site-footer {
   opacity: 0;
+}
+
+html.fp-page-enter .navbar-fitpower,
+html.fp-page-enter main,
+html.fp-page-enter .landing-header,
+html.fp-page-enter .landing-main,
+html.fp-page-enter .login-top,
+html.fp-page-enter .login-main,
+html.fp-page-enter .site-footer {
   transform: translateY(12px);
 }
 
@@ -28,6 +38,16 @@ html.fp-page-ready .login-top,
 html.fp-page-ready .login-main,
 html.fp-page-ready .site-footer {
   opacity: 1;
+  transition: opacity var(--fp-dur) var(--fp-ease-out);
+}
+
+html.fp-page-ready .navbar-fitpower,
+html.fp-page-ready main,
+html.fp-page-ready .landing-header,
+html.fp-page-ready .landing-main,
+html.fp-page-ready .login-top,
+html.fp-page-ready .login-main,
+html.fp-page-ready .site-footer {
   transform: none;
   transition:
     opacity var(--fp-dur) var(--fp-ease-out),
@@ -43,11 +63,21 @@ html.fp-page-leave .login-top,
 html.fp-page-leave .login-main,
 html.fp-page-leave .site-footer {
   opacity: 0;
+  transition: opacity var(--fp-dur-fast) ease;
+  pointer-events: none;
+}
+
+html.fp-page-leave .navbar-fitpower,
+html.fp-page-leave main,
+html.fp-page-leave .landing-header,
+html.fp-page-leave .landing-main,
+html.fp-page-leave .login-top,
+html.fp-page-leave .login-main,
+html.fp-page-leave .site-footer {
   transform: translateY(-10px);
   transition:
     opacity var(--fp-dur-fast) ease,
     transform var(--fp-dur-fast) ease;
-  pointer-events: none;
 }
 
 .fp-reveal {
