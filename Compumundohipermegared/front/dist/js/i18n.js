@@ -19,6 +19,16 @@ const I18N = {
     'landing.contact': 'CONTACTO',
     'landing.hours': 'HORARIOS',
     'landing.location': 'UBICACION',
+    'footer.contact': 'CONTACTO',
+    'footer.hours': 'HORARIOS',
+    'footer.location': 'UBICACIÓN',
+    'footer.monFri': 'LUN - VIE',
+    'footer.saturday': 'SÁBADO',
+    'footer.sunday': 'DOMINGO',
+    'footer.closed': 'CERRADO',
+    'footer.rights': '© 2026 FITPOWER. Todos los derechos reservados. Design By UAtlan',
+    'footer.mapAria': 'Abrir ubicación de FitPower en el mapa',
+    'footer.mapAlt': 'Mapa de FitPower en Atlántida',
     'faq.title': 'PREGUNTAS FRECUENTES',
     'faq.q1': '¿Cómo me anoto a una actividad?',
     'faq.a1': 'Iniciá sesión, entrá a tu dashboard y en Próximas clases elegí el día y tocá Anotarse.',
@@ -197,6 +207,16 @@ const I18N = {
     'landing.contact': 'CONTACT',
     'landing.hours': 'HOURS',
     'landing.location': 'LOCATION',
+    'footer.contact': 'CONTACT',
+    'footer.hours': 'HOURS',
+    'footer.location': 'LOCATION',
+    'footer.monFri': 'MON - FRI',
+    'footer.saturday': 'SATURDAY',
+    'footer.sunday': 'SUNDAY',
+    'footer.closed': 'CLOSED',
+    'footer.rights': '© 2026 FITPOWER. All rights reserved. Design By UAtlan',
+    'footer.mapAria': 'Open FitPower location on the map',
+    'footer.mapAlt': 'FitPower map in Atlántida',
     'faq.title': 'FREQUENTLY ASKED QUESTIONS',
     'faq.q1': 'How do I join an activity?',
     'faq.a1': 'Sign in, open your dashboard, pick a day under Upcoming classes and tap Join.',
@@ -382,6 +402,8 @@ function applyTranslations(root) {
       el.setAttribute('placeholder', value);
     } else if (mode === 'aria') {
       el.setAttribute('aria-label', value);
+    } else if (mode === 'alt') {
+      el.setAttribute('alt', value);
     } else {
       el.textContent = value;
     }
@@ -389,18 +411,41 @@ function applyTranslations(root) {
   document.documentElement.lang = getLang();
 }
 
+function syncLangButtons() {
+  const label = t('lang.label');
+  document.querySelectorAll('[data-lang-toggle]').forEach(function (btn) {
+    btn.textContent = label;
+  });
+}
+
 function toggleLang() {
   setLang(getLang() === 'es' ? 'en' : 'es');
   applyTranslations();
+  syncLangButtons();
   document.dispatchEvent(new CustomEvent('fitpower:langchange', { detail: { lang: getLang() } }));
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+function bootI18n() {
   applyTranslations();
-  document.querySelectorAll('[data-lang-toggle]').forEach(function (btn) {
-    btn.addEventListener('click', function (event) {
-      event.preventDefault();
-      toggleLang();
-    });
+  syncLangButtons();
+}
+
+if (!window.__fpI18nBound) {
+  window.__fpI18nBound = true;
+  document.addEventListener('click', function (event) {
+    const btn = event.target.closest('[data-lang-toggle]');
+    if (!btn) return;
+    event.preventDefault();
+    toggleLang();
   });
-});
+  document.addEventListener('fitpower:footer-ready', function () {
+    applyTranslations(document.querySelector('[data-shared-footer]') || document);
+    syncLangButtons();
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootI18n);
+} else {
+  bootI18n();
+}

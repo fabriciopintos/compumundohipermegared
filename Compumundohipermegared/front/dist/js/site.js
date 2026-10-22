@@ -78,26 +78,26 @@
         '<div class="site-footer-inner">' +
           '<div><a class="site-footer-brand" href="' + brandHref + '">FITPOWER</a></div>' +
           '<div>' +
-            '<h3 class="site-footer-title">CONTACTO</h3>' +
+            '<h3 class="site-footer-title" data-i18n="footer.contact">CONTACTO</h3>' +
             '<p class="site-footer-text">contacto@fitpower.com</p>' +
             '<p class="site-footer-text">+099 88 77 66</p>' +
             '<p class="site-footer-text">Instagram: @fitpower</p>' +
           '</div>' +
           '<div>' +
-            '<h3 class="site-footer-title">HORARIOS</h3>' +
-            '<div class="site-footer-horario"><span>LUN - VIE</span><span>07:00 - 22:00</span></div>' +
-            '<div class="site-footer-horario"><span>SÁBADO</span><span>08:00 - 20:00</span></div>' +
-            '<div class="site-footer-horario"><span>DOMINGO</span><span>CERRADO</span></div>' +
+            '<h3 class="site-footer-title" data-i18n="footer.hours">HORARIOS</h3>' +
+            '<div class="site-footer-horario"><span data-i18n="footer.monFri">LUN - VIE</span><span>07:00 - 22:00</span></div>' +
+            '<div class="site-footer-horario"><span data-i18n="footer.saturday">SÁBADO</span><span>08:00 - 20:00</span></div>' +
+            '<div class="site-footer-horario"><span data-i18n="footer.sunday">DOMINGO</span><span data-i18n="footer.closed">CERRADO</span></div>' +
           '</div>' +
           '<div>' +
-            '<h3 class="site-footer-title">UBICACION</h3>' +
-            '<a class="site-footer-mapa" href="https://www.google.com/maps?q=Calle+4+y+Diagonal+Sur+America,+Atl%C3%A1ntida,+Canelones,+Uruguay" target="_blank" rel="noopener noreferrer" aria-label="Abrir ubicación de FitPower en el mapa">' +
-              '<img src="/imagenes/Rectangle%2035.png" alt="Mapa de FitPower en Atlántida" width="480" height="280" loading="lazy" decoding="async">' +
+            '<h3 class="site-footer-title" data-i18n="footer.location">UBICACIÓN</h3>' +
+            '<a class="site-footer-mapa" href="https://www.google.com/maps?q=Calle+4+y+Diagonal+Sur+America,+Atl%C3%A1ntida,+Canelones,+Uruguay" target="_blank" rel="noopener noreferrer" data-i18n="footer.mapAria" data-i18n-mode="aria" aria-label="Abrir ubicación de FitPower en el mapa">' +
+              '<img src="/imagenes/Rectangle%2035.png" alt="Mapa de FitPower en Atlántida" data-i18n="footer.mapAlt" data-i18n-mode="alt" width="480" height="280" loading="lazy" decoding="async">' +
             '</a>' +
             '<p class="site-footer-text">Calle 4 y Diagonal Sur América, Atlántida, Canelones</p>' +
           '</div>' +
         '</div>' +
-        '<div class="site-footer-copy">© 2026 FITPOWER. Todos los derechos reservados. Design By UAtlan</div>' +
+        '<div class="site-footer-copy" data-i18n="footer.rights">© 2026 FITPOWER. Todos los derechos reservados. Design By UAtlan</div>' +
       '</footer>'
     );
   }
@@ -106,6 +106,11 @@
     var mount = document.querySelector('[data-site-footer]');
     if (!mount || document.querySelector('[data-shared-footer]')) return;
     mount.outerHTML = footerHtml();
+    var footer = document.querySelector('[data-shared-footer]');
+    if (typeof applyTranslations === 'function' && footer) {
+      applyTranslations(footer);
+    }
+    document.dispatchEvent(new CustomEvent('fitpower:footer-ready'));
   }
 
   function markPageEnter() {
